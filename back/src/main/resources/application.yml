@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: MDD
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: 'postgres'
+    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/ocp6?charSet=UTF-8&prepareThreshold=0
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+server:
+  servlet:
+    context-path: /mdd/api
+
+security:
+  secret-key: ${SECRET_KEY}
+  access-token-duration: 5m
+  refresh-token-duration: 1d
