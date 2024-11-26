@@ -1,6 +1,6 @@
 package com.openclassrooms.mddapi.application.authentication;
 
-public record CredentialsDto(
+public record LoginDto(
         String login,
         String password
 ) {

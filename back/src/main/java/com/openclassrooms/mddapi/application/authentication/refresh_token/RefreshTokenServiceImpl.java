@@ -4,6 +4,7 @@ import com.openclassrooms.mddapi.application.authentication.AuthException;
 import com.openclassrooms.mddapi.application.security.SecurityProperties;
 import com.openclassrooms.mddapi.domains.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,7 +28,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         oRefreshToken.ifPresent(refreshTokenRepository::delete);
 
         RefreshToken refreshToken = RefreshToken.builder()
-                .user(userRepository.findByEmail(email).orElseThrow(() -> new AuthException("User not found")))
+                .user(userRepository.findByEmail(email).orElseThrow(() -> new AuthException("User not found", HttpStatus.NOT_FOUND)))
                 .token(UUID.randomUUID().toString())
                 .expiryDate(LocalDateTime.now().plus(securityProperties.getRefreshTokenDuration()))
                 .build();
@@ -37,14 +38,14 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     @Override
     public void validateRefreshToken(RefreshTokenRequestDto refreshTokenRequestDto) {
         RefreshToken refreshToken = refreshTokenRepository.findByTokenAndUserEmail(refreshTokenRequestDto.refreshToken(), refreshTokenRequestDto.email())
-                .orElseThrow(() -> new AuthException("Refresh token not found"));
+                .orElseThrow(() -> new AuthException("Refresh token not found", HttpStatus.NOT_FOUND));
 
         if (refreshToken.getExpiryDate().isBefore(LocalDateTime.now())) {
-            throw new AuthException("Refresh token is expired");
+            throw new AuthException("Refresh token is expired", HttpStatus.UNAUTHORIZED);
         }
 
         if (!refreshToken.getUser().getEmail().equals(refreshTokenRequestDto.email())) {
-            throw new AuthException("Invalid refresh token");
+            throw new AuthException("Invalid refresh token", HttpStatus.UNAUTHORIZED);
         }
     }
 

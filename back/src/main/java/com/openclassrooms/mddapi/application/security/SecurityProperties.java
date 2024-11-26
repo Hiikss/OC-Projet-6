@@ -24,6 +24,5 @@ public class SecurityProperties {
     @PostConstruct
     public void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
-        System.out.println("secretKey: " + secretKey);
     }
 }

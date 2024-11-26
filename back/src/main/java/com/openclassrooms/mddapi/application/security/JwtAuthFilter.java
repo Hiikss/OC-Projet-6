@@ -8,15 +8,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 import java.util.List;
 
+@Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final UserAuthenticationProvider userAuthenticationProvider;
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
     private final List<AntPathRequestMatcher> excludedMatchers = List.of(
             new AntPathRequestMatcher("/auth/**")
@@ -37,13 +41,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (authElements.length == 2 && "Bearer".equals(authElements[0])) {
                 try {
                     SecurityContextHolder.getContext().setAuthentication(userAuthenticationProvider.validateAccessToken(authElements[1]));
+                    filterChain.doFilter(request, response);
                 } catch (RuntimeException e) {
                     SecurityContextHolder.clearContext();
-                    throw e;
+                    handlerExceptionResolver.resolveException(request, response, null, e);
                 }
             }
         }
-
-        filterChain.doFilter(request, response);
     }
+
 }
