@@ -3,6 +3,7 @@ package com.openclassrooms.mddapi.application.authentication;
 import com.openclassrooms.mddapi.application.authentication.refresh_token.RefreshTokenRequestDto;
 import com.openclassrooms.mddapi.application.authentication.refresh_token.RefreshTokenService;
 import com.openclassrooms.mddapi.application.security.UserAuthenticationProvider;
+import com.openclassrooms.mddapi.domains.user.UserRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,20 +30,20 @@ public class AuthController {
         log.info("[Auth Controller] Attempting to login");
 
         AuthenticatedUserDto user = authService.login(loginDto);
-        user.setAccessToken(userAuthenticationProvider.createAccessToken(user.getEmail()));
-        user.setRefreshToken(refreshTokenService.createRefreshToken(user.getEmail()).getToken());
+        user.setAccessToken(userAuthenticationProvider.createAccessToken(user.getId()));
+        user.setRefreshToken(refreshTokenService.createRefreshToken(user.getId()).getToken());
 
         return user;
     }
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public AuthenticatedUserDto register(@Valid @RequestBody RegisterDto registerDto) {
+    public AuthenticatedUserDto register(@Valid @RequestBody UserRequestDto userRequestDto) {
         log.info("[Auth Controller] Attempting to register");
 
-        AuthenticatedUserDto user = authService.register(registerDto);
-        user.setAccessToken(userAuthenticationProvider.createAccessToken(user.getEmail()));
-        user.setRefreshToken(refreshTokenService.createRefreshToken(user.getEmail()).getToken());
+        AuthenticatedUserDto user = authService.register(userRequestDto);
+        user.setAccessToken(userAuthenticationProvider.createAccessToken(user.getId()));
+        user.setRefreshToken(refreshTokenService.createRefreshToken(user.getId()).getToken());
 
         return user;
     }
@@ -54,9 +55,9 @@ public class AuthController {
 
         refreshTokenService.validateRefreshToken(refreshTokenRequestDto);
 
-        AuthenticatedUserDto user = authService.getAuthenticatedUser(refreshTokenRequestDto.email());
-        user.setAccessToken(userAuthenticationProvider.createAccessToken(user.getEmail()));
-        user.setRefreshToken(refreshTokenService.createRefreshToken(user.getEmail()).getToken());
+        AuthenticatedUserDto user = authService.getAuthenticatedUser(refreshTokenRequestDto.id());
+        user.setAccessToken(userAuthenticationProvider.createAccessToken(user.getId()));
+        user.setRefreshToken(refreshTokenService.createRefreshToken(user.getId()).getToken());
 
         return user;
     }

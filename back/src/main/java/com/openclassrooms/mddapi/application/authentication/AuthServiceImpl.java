@@ -2,6 +2,7 @@ package com.openclassrooms.mddapi.application.authentication;
 
 import com.openclassrooms.mddapi.domains.user.User;
 import com.openclassrooms.mddapi.domains.user.UserRepository;
+import com.openclassrooms.mddapi.domains.user.UserRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,23 +28,23 @@ public class AuthServiceImpl implements AuthService {
             return authMapper.toAuthenticatedUserDto(oUser.get());
         }
 
-        throw new AuthException("Bad credentials", HttpStatus.BAD_REQUEST);
+        throw new AuthException("Bad credentials", HttpStatus.UNAUTHORIZED);
     }
 
     @Override
-    public AuthenticatedUserDto register(RegisterDto registerDto) {
-        Optional<User> oUser = userRepository.findByEmail(registerDto.email());
+    public AuthenticatedUserDto register(UserRequestDto userRequestDto) {
+        Optional<User> oUser = userRepository.findByEmail(userRequestDto.email());
         if (oUser.isPresent()) {
-            throw new AuthException("Email is already used", HttpStatus.BAD_REQUEST);
+            throw new AuthException("Email is already used", HttpStatus.CONFLICT);
         }
 
-        oUser = userRepository.findByUsername(registerDto.username());
+        oUser = userRepository.findByUsername(userRequestDto.username());
         if (oUser.isPresent()) {
-            throw new AuthException("Username is already used", HttpStatus.BAD_REQUEST);
+            throw new AuthException("Username is already used", HttpStatus.CONFLICT);
         }
 
-        User user = authMapper.toUser(registerDto);
-        user.setPassword(passwordEncoder.encode(registerDto.password()));
+        User user = authMapper.toUser(userRequestDto);
+        user.setPassword(passwordEncoder.encode(userRequestDto.password()));
 
         User savedUser = userRepository.save(user);
 
@@ -51,8 +52,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthenticatedUserDto getAuthenticatedUser(String email) {
-        User user = userRepository.findByEmail(email)
+    public AuthenticatedUserDto getAuthenticatedUser(String userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new AuthException("User not found", HttpStatus.NOT_FOUND));
 
         return authMapper.toAuthenticatedUserDto(user);

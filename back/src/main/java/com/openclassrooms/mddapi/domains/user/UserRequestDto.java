@@ -1,11 +1,11 @@
-package com.openclassrooms.mddapi.application.authentication;
+package com.openclassrooms.mddapi.domains.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record RegisterDto(
+public record UserRequestDto(
         @NotBlank(message = "L'email ne doit pas être vide")
         @Email(message = "L'email doit avoir un format valide")
         @Size(max = 254, message = "L'email doit être inférieur à 254 caractères")

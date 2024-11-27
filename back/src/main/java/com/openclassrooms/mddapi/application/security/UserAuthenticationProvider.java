@@ -23,12 +23,12 @@ public class UserAuthenticationProvider {
 
     private final SecurityProperties securityProperties;
 
-    public String createAccessToken(String email) {
+    public String createAccessToken(String userId) {
         Date now = new Date();
         Date validity = Date.from(Instant.now().plus(securityProperties.getAccessTokenDuration()));
 
         return JWT.create()
-                .withSubject(email)
+                .withSubject(userId)
                 .withIssuedAt(now)
                 .withExpiresAt(validity)
                 .sign(Algorithm.HMAC256(securityProperties.getSecretKey()));

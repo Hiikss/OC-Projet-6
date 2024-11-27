@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AuthenticatedUserDto {
 
+    private String id;
+
     private String email;
 
     private String username;
