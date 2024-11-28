@@ -30,11 +30,6 @@ public class Topic {
     private String description;
 
     @ManyToMany(mappedBy = "topics")
-    @JoinTable(
-            name = "topics_users",
-            joinColumns = @JoinColumn(name = "topic_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
     private Set<User> users = new HashSet<>();
 
 }
