@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.domains.topic;
 
+import com.openclassrooms.mddapi.domains.post.Post;
 import com.openclassrooms.mddapi.domains.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,5 +32,8 @@ public class Topic {
 
     @ManyToMany(mappedBy = "topics")
     private Set<User> users = new HashSet<>();
+
+    @OneToMany(mappedBy = "topic")
+    private Set<Post> posts = new HashSet<>();
 
 }

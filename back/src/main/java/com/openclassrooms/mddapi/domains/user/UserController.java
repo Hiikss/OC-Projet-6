@@ -42,4 +42,9 @@ public class UserController {
 
     }
 
+    @DeleteMapping("/{userId}/topics/{topicId}")
+    public void deleteTopicFromUser(@PathVariable String userId, @PathVariable String topicId) {
+
+    }
+
 }

@@ -4,6 +4,6 @@ import org.springframework.data.domain.Page;
 
 public interface TopicService {
 
-    Page<TopicResponseDto> getTopics(int page, int size);
+    Page<TopicResponseDto> getTopicsByPagination(int page, int size);
 
 }

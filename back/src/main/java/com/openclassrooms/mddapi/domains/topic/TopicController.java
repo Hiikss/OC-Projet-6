@@ -20,7 +20,7 @@ public class TopicController {
 
     @GetMapping
     public ResponseEntity<List<TopicResponseDto>> getTopics(@RequestParam int page, @RequestParam int size) {
-        Page<TopicResponseDto> topicsPage = topicService.getTopics(page, size);
+        Page<TopicResponseDto> topicsPage = topicService.getTopicsByPagination(page, size);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", Long.toString(topicsPage.getTotalElements()));

@@ -1,5 +1,7 @@
 package com.openclassrooms.mddapi.domains.user;
 
+import com.openclassrooms.mddapi.domains.post.comment.Comment;
+import com.openclassrooms.mddapi.domains.post.Post;
 import com.openclassrooms.mddapi.domains.topic.Topic;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -48,4 +50,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "topic_id")
     )
     private Set<Topic> topics = new HashSet<>();
+
+    @OneToMany(mappedBy = "author")
+    private Set<Post> posts = new HashSet<>();
+
+    @OneToMany(mappedBy = "author")
+    private Set<Comment> comments = new HashSet<>();
 }
