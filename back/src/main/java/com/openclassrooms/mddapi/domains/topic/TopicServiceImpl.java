@@ -26,4 +26,22 @@ public class TopicServiceImpl implements TopicService {
         return new PageImpl<>(topicResponseDtos, pageable, topics.getTotalElements());
     }
 
+    @Override
+    public List<TopicResponseDto> getTopicsByUserId(String userId) {
+        List<Topic> topics = topicRepository.findByUserId(userId);
+
+        return topicMapper.toTopicResponseDtoList(topics);
+    }
+
+    @Override
+    public List<TopicResponseDto> addTopicToUser(String userId, String topicId) {
+
+        return List.of();
+    }
+
+    @Override
+    public List<TopicResponseDto> removeTopicFromUser(String userId, String topicId) {
+        return List.of();
+    }
+
 }

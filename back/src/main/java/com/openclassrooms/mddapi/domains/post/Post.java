@@ -1,5 +1,6 @@
 package com.openclassrooms.mddapi.domains.post;
 
+import com.openclassrooms.mddapi.domains.post.comment.Comment;
 import com.openclassrooms.mddapi.domains.topic.Topic;
 import com.openclassrooms.mddapi.domains.user.User;
 import jakarta.persistence.*;
@@ -12,6 +13,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "posts")
@@ -44,4 +47,7 @@ public class Post {
     @ManyToOne
     @JoinColumn(name = "topic_id", nullable = false)
     private Topic topic;
+
+    @OneToMany(mappedBy = "post")
+    private Set<Comment> comments = new HashSet<>();
 }

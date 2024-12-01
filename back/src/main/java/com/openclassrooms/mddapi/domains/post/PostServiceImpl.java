@@ -1,8 +1,10 @@
 package com.openclassrooms.mddapi.domains.post;
 
 import com.openclassrooms.mddapi.domains.topic.Topic;
+import com.openclassrooms.mddapi.domains.topic.TopicException;
 import com.openclassrooms.mddapi.domains.topic.TopicRepository;
 import com.openclassrooms.mddapi.domains.user.User;
+import com.openclassrooms.mddapi.domains.user.UserException;
 import com.openclassrooms.mddapi.domains.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -41,10 +43,10 @@ public class PostServiceImpl implements PostService {
     @Override
     public void createPost(PostRequestDto postRequestDto, String authorId) {
         User user = userRepository.findById(authorId)
-                .orElseThrow(() -> new PostException("User not found", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new UserException("User not found", HttpStatus.NOT_FOUND));
 
         Topic topic = topicRepository.findById(postRequestDto.topicId())
-                .orElseThrow(() -> new PostException("Topic not found", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new TopicException("Topic not found", HttpStatus.NOT_FOUND));
 
         Post post = Post.builder()
                 .title(postRequestDto.title())

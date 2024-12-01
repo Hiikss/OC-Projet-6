@@ -2,6 +2,7 @@ package com.openclassrooms.mddapi.domains.user;
 
 import com.openclassrooms.mddapi.application.authentication.AuthenticatedUserDto;
 import com.openclassrooms.mddapi.domains.topic.TopicResponseDto;
+import com.openclassrooms.mddapi.domains.topic.TopicService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final TopicService topicService;
 
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
@@ -29,7 +31,7 @@ public class UserController {
             @PathVariable String userId,
             @Valid @RequestBody UserRequestDto userRequestDto,
             Authentication authentication) {
-        return userService.updateUser(userId, userRequestDto, ((AuthenticatedUserDto) authentication).getId());
+        return userService.updateUser(userId, userRequestDto, ((AuthenticatedUserDto) authentication.getPrincipal()).getId());
     }
 
     @GetMapping("/{userId}/topics")

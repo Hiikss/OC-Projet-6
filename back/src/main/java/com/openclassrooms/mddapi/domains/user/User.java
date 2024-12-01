@@ -43,7 +43,7 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany
     @JoinTable(
             name = "users_topics",
             joinColumns = @JoinColumn(name = "user_id"),

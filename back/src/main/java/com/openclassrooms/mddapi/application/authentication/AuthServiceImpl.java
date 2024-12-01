@@ -1,8 +1,6 @@
 package com.openclassrooms.mddapi.application.authentication;
 
-import com.openclassrooms.mddapi.domains.user.User;
-import com.openclassrooms.mddapi.domains.user.UserRepository;
-import com.openclassrooms.mddapi.domains.user.UserRequestDto;
+import com.openclassrooms.mddapi.domains.user.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,9 +13,8 @@ import java.util.Optional;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-
     private final AuthMapper authMapper;
-
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -43,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
             throw new AuthException("Username is already used", HttpStatus.CONFLICT);
         }
 
-        User user = authMapper.toUser(userRequestDto);
+        User user = userMapper.toUser(userRequestDto);
         user.setPassword(passwordEncoder.encode(userRequestDto.password()));
 
         User savedUser = userRepository.save(user);
@@ -54,7 +51,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthenticatedUserDto getAuthenticatedUser(String userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AuthException("User not found", HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new UserException("User not found", HttpStatus.NOT_FOUND));
 
         return authMapper.toAuthenticatedUserDto(user);
     }
