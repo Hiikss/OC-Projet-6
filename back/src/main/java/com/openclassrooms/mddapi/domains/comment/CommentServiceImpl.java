@@ -1,4 +1,4 @@
-package com.openclassrooms.mddapi.domains.post.comment;
+package com.openclassrooms.mddapi.domains.comment;
 
 import com.openclassrooms.mddapi.domains.post.Post;
 import com.openclassrooms.mddapi.domains.post.PostException;

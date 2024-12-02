@@ -1,6 +1,6 @@
 package com.openclassrooms.mddapi.domains.user;
 
-import com.openclassrooms.mddapi.domains.post.comment.Comment;
+import com.openclassrooms.mddapi.domains.comment.Comment;
 import com.openclassrooms.mddapi.domains.post.Post;
 import com.openclassrooms.mddapi.domains.topic.Topic;
 import jakarta.persistence.*;

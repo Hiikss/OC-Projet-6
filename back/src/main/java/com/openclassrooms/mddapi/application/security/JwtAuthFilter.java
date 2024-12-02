@@ -41,13 +41,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (authElements.length == 2 && "Bearer".equals(authElements[0])) {
                 try {
                     SecurityContextHolder.getContext().setAuthentication(userAuthenticationProvider.validateAccessToken(authElements[1]));
-                    filterChain.doFilter(request, response);
                 } catch (RuntimeException e) {
                     SecurityContextHolder.clearContext();
                     handlerExceptionResolver.resolveException(request, response, null, e);
+                    return;
                 }
             }
         }
+
+        filterChain.doFilter(request, response);
     }
 
 }

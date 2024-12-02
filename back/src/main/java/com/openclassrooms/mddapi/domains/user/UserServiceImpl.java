@@ -1,18 +1,25 @@
 package com.openclassrooms.mddapi.domains.user;
 
+import com.openclassrooms.mddapi.domains.topic.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final TopicRepository topicRepository;
     private final UserMapper userMapper;
+    private final TopicMapper topicMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -49,6 +56,29 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
 
         return userMapper.toUserDto(savedUser);
+    }
+
+    public List<TopicResponseDto> getTopicsByUserId(String userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException("User not found", HttpStatus.NOT_FOUND));
+
+        return topicMapper.toTopicResponseDtoList(user.getTopics().stream().toList());
+    }
+
+    @Override
+    public List<TopicResponseDto> subscribeToTopic(String userId, String topicId) {
+        log.info("[User Service] Subscribing to topic {}", topicId);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException("User not found", HttpStatus.NOT_FOUND));
+
+        Topic topic = topicRepository.findById(topicId)
+                .orElseThrow(() -> new TopicException("Topic not found", HttpStatus.NOT_FOUND));
+
+        user.getTopics().add(topic);
+        userRepository.save(user);
+
+        return topicMapper.toTopicResponseDtoList(user.getTopics().stream().toList());
     }
 
 }

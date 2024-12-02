@@ -1,4 +1,4 @@
-package com.openclassrooms.mddapi.domains.post.comment;
+package com.openclassrooms.mddapi.domains.comment;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -1,9 +1,9 @@
 package com.openclassrooms.mddapi.domains.post;
 
 import com.openclassrooms.mddapi.application.authentication.AuthenticatedUserDto;
-import com.openclassrooms.mddapi.domains.post.comment.CommentRequestDto;
-import com.openclassrooms.mddapi.domains.post.comment.CommentResponseDto;
-import com.openclassrooms.mddapi.domains.post.comment.CommentService;
+import com.openclassrooms.mddapi.domains.comment.CommentRequestDto;
+import com.openclassrooms.mddapi.domains.comment.CommentResponseDto;
+import com.openclassrooms.mddapi.domains.comment.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;

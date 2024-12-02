@@ -36,16 +36,16 @@ public class UserController {
 
     @GetMapping("/{userId}/topics")
     public List<TopicResponseDto> getUserTopics(@PathVariable String userId) {
-        return List.of();
+        return userService.getTopicsByUserId(userId);
     }
 
     @PostMapping("/{userId}/topics/{topicId}")
-    public void addTopicToUser(@PathVariable String userId, @PathVariable String topicId) {
-
+    public void subscribeToTopic(@PathVariable String userId, @PathVariable String topicId) {
+        userService.subscribeToTopic(userId, topicId);
     }
 
     @DeleteMapping("/{userId}/topics/{topicId}")
-    public void deleteTopicFromUser(@PathVariable String userId, @PathVariable String topicId) {
+    public void unsubscribeFromTopic(@PathVariable String userId, @PathVariable String topicId) {
 
     }
 
