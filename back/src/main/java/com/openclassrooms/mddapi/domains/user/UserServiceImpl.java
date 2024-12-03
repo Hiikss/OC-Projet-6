@@ -1,15 +1,14 @@
 package com.openclassrooms.mddapi.domains.user;
 
 import com.openclassrooms.mddapi.domains.topic.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -58,6 +57,8 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserDto(savedUser);
     }
 
+    @Override
+    @Transactional
     public List<TopicResponseDto> getTopicsByUserId(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException("User not found", HttpStatus.NOT_FOUND));
@@ -66,14 +67,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<TopicResponseDto> subscribeToTopic(String userId, String topicId) {
-        log.info("[User Service] Subscribing to topic {}", topicId);
+    @Transactional
+    public List<TopicResponseDto> addTopicToUser(String userId, String topicId) {
+        log.info("[User Service] Add topic {} to user {}", topicId, userId);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException("User not found", HttpStatus.NOT_FOUND));
 
         Topic topic = topicRepository.findById(topicId)
                 .orElseThrow(() -> new TopicException("Topic not found", HttpStatus.NOT_FOUND));
+
+        if(user.getTopics().contains(topic)) {
+            throw new UserException("Topic already added to user", HttpStatus.CONFLICT);
+        }
 
         user.getTopics().add(topic);
         userRepository.save(user);

@@ -12,5 +12,5 @@ public interface UserService {
 
     List<TopicResponseDto> getTopicsByUserId(String userId);
 
-    List<TopicResponseDto> subscribeToTopic(String userId, String topicId);
+    List<TopicResponseDto> addTopicToUser(String userId, String topicId);
 }

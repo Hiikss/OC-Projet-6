@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -31,9 +32,8 @@ public class Topic {
     private String description;
 
     @ManyToMany(mappedBy = "topics")
-    private Set<User> users = new HashSet<>();
+    private List<User> user;
 
     @OneToMany(mappedBy = "topic")
-    private Set<Post> posts = new HashSet<>();
-
+    private List<Post> posts;
 }

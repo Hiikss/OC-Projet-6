@@ -2,8 +2,10 @@ package com.openclassrooms.mddapi.application.authentication.refresh_token;
 
 import com.openclassrooms.mddapi.application.authentication.AuthException;
 import com.openclassrooms.mddapi.application.security.SecurityProperties;
+import com.openclassrooms.mddapi.domains.user.User;
 import com.openclassrooms.mddapi.domains.user.UserException;
 import com.openclassrooms.mddapi.domains.user.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

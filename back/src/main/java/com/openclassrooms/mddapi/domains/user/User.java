@@ -14,6 +14,7 @@ import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -49,11 +50,11 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "topic_id")
     )
-    private Set<Topic> topics = new HashSet<>();
+    private Set<Topic> topics;
 
     @OneToMany(mappedBy = "author")
-    private Set<Post> posts = new HashSet<>();
+    private List<Post> posts;
 
     @OneToMany(mappedBy = "author")
-    private Set<Comment> comments = new HashSet<>();
+    private List<Comment> comments;
 }

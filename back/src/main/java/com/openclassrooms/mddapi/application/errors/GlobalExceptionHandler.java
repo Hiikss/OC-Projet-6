@@ -2,6 +2,9 @@ package com.openclassrooms.mddapi.application.errors;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.openclassrooms.mddapi.application.authentication.AuthException;
+import com.openclassrooms.mddapi.domains.post.Post;
+import com.openclassrooms.mddapi.domains.post.PostException;
+import com.openclassrooms.mddapi.domains.topic.TopicException;
 import com.openclassrooms.mddapi.domains.user.UserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +46,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserException.class)
     public ResponseEntity<ErrorDto> handleUserException(UserException e) {
+        return ResponseEntity
+                .status(e.getStatus())
+                .body(new ErrorDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(TopicException.class)
+    public ResponseEntity<ErrorDto> handleTopicException(TopicException e) {
+        return ResponseEntity
+                .status(e.getStatus())
+                .body(new ErrorDto(e.getMessage()));
+    }
+
+    @ExceptionHandler(PostException.class)
+    public ResponseEntity<ErrorDto> handlePostException(PostException e) {
         return ResponseEntity
                 .status(e.getStatus())
                 .body(new ErrorDto(e.getMessage()));

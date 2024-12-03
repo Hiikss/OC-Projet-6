@@ -26,7 +26,7 @@ public class RefreshToken {
 
     private LocalDateTime expiryDate;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 }

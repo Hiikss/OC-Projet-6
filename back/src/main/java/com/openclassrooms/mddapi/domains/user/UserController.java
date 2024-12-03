@@ -39,9 +39,9 @@ public class UserController {
         return userService.getTopicsByUserId(userId);
     }
 
-    @PostMapping("/{userId}/topics/{topicId}")
+    @PutMapping("/{userId}/topics/{topicId}")
     public void subscribeToTopic(@PathVariable String userId, @PathVariable String topicId) {
-        userService.subscribeToTopic(userId, topicId);
+        userService.addTopicToUser(userId, topicId);
     }
 
     @DeleteMapping("/{userId}/topics/{topicId}")
