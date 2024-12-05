@@ -24,7 +24,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<PostResponseDto> getPostsByPagination(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
 
         Page<Post> posts = postRepository.findAll(pageable);
         List<PostResponseDto> postResponseDtos = postMapper.toPostResponseDtoList(posts.getContent());

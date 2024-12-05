@@ -21,7 +21,9 @@ public class TopicController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TopicResponseDto>> getTopics(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<TopicResponseDto>> getTopics(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
         Page<TopicResponseDto> topicsPage = topicService.getTopicsByPagination(page, size);
 
         HttpHeaders headers = new HttpHeaders();

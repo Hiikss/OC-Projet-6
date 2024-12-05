@@ -2,7 +2,6 @@ package com.openclassrooms.mddapi.domains.user;
 
 import com.openclassrooms.mddapi.application.authentication.AuthenticatedUserDto;
 import com.openclassrooms.mddapi.domains.topic.TopicResponseDto;
-import com.openclassrooms.mddapi.domains.topic.TopicService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final TopicService topicService;
 
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
@@ -40,13 +38,13 @@ public class UserController {
     }
 
     @PutMapping("/{userId}/topics/{topicId}")
-    public void subscribeToTopic(@PathVariable String userId, @PathVariable String topicId) {
-        userService.addTopicToUser(userId, topicId);
+    public List<TopicResponseDto> addTopicToUser(@PathVariable String userId, @PathVariable String topicId) {
+        return userService.addTopicToUser(userId, topicId);
     }
 
     @DeleteMapping("/{userId}/topics/{topicId}")
-    public void unsubscribeFromTopic(@PathVariable String userId, @PathVariable String topicId) {
-
+    public List<TopicResponseDto> removeTopicFromUser(@PathVariable String userId, @PathVariable String topicId) {
+        return userService.removeTopicFromUser(userId, topicId);
     }
 
 }

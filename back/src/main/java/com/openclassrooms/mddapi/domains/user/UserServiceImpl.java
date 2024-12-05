@@ -1,14 +1,14 @@
 package com.openclassrooms.mddapi.domains.user;
 
 import com.openclassrooms.mddapi.domains.topic.*;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -58,7 +58,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public List<TopicResponseDto> getTopicsByUserId(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException("User not found", HttpStatus.NOT_FOUND));
@@ -67,7 +66,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public List<TopicResponseDto> addTopicToUser(String userId, String topicId) {
         log.info("[User Service] Add topic {} to user {}", topicId, userId);
 
@@ -77,11 +75,30 @@ public class UserServiceImpl implements UserService {
         Topic topic = topicRepository.findById(topicId)
                 .orElseThrow(() -> new TopicException("Topic not found", HttpStatus.NOT_FOUND));
 
-        if(user.getTopics().contains(topic)) {
+        if (user.getTopics().contains(topic)) {
             throw new UserException("Topic already added to user", HttpStatus.CONFLICT);
         }
 
         user.getTopics().add(topic);
+        userRepository.save(user);
+
+        return topicMapper.toTopicResponseDtoList(user.getTopics().stream().toList());
+    }
+
+    @Override
+    public List<TopicResponseDto> removeTopicFromUser(String userId, String topicId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException("User not found", HttpStatus.NOT_FOUND));
+
+        user.getTopics().stream()
+                .filter(topic -> topic.getId().equals(topicId))
+                .findAny()
+                .ifPresentOrElse(
+                        topic -> user.getTopics().remove(topic),
+                        () -> {
+                            throw new TopicException("Topic not found", HttpStatus.NOT_FOUND);
+                        });
+
         userRepository.save(user);
 
         return topicMapper.toTopicResponseDtoList(user.getTopics().stream().toList());

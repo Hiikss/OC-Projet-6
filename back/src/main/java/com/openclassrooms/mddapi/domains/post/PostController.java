@@ -22,7 +22,9 @@ public class PostController {
     private final CommentService commentService;
 
     @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getAllPosts(@RequestParam int page, @RequestParam int size) {
+    public ResponseEntity<List<PostResponseDto>> getAllPosts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size) {
         Page<PostResponseDto> postsPage = postService.getPostsByPagination(page, size);
 
         HttpHeaders headers = new HttpHeaders();

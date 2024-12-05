@@ -4,10 +4,7 @@ import com.openclassrooms.mddapi.domains.comment.Comment;
 import com.openclassrooms.mddapi.domains.topic.Topic;
 import com.openclassrooms.mddapi.domains.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
@@ -18,7 +15,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "posts")
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

@@ -4,22 +4,19 @@ import com.openclassrooms.mddapi.domains.comment.Comment;
 import com.openclassrooms.mddapi.domains.post.Post;
 import com.openclassrooms.mddapi.domains.topic.Topic;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -50,11 +47,11 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "topic_id")
     )
-    private Set<Topic> topics;
+    private Set<Topic> topics = new HashSet<>();
 
     @OneToMany(mappedBy = "author")
-    private List<Post> posts;
+    private Set<Post> posts = new HashSet<>();
 
     @OneToMany(mappedBy = "author")
-    private List<Comment> comments;
+    private Set<Comment> comments = new HashSet<>();
 }

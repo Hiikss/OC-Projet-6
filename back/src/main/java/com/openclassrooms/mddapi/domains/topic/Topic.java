@@ -3,19 +3,16 @@ package com.openclassrooms.mddapi.domains.topic;
 import com.openclassrooms.mddapi.domains.post.Post;
 import com.openclassrooms.mddapi.domains.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "topics")
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -32,8 +29,8 @@ public class Topic {
     private String description;
 
     @ManyToMany(mappedBy = "topics")
-    private List<User> user;
+    private Set<User> users = new HashSet<>();
 
     @OneToMany(mappedBy = "topic")
-    private List<Post> posts;
+    private Set<Post> posts = new HashSet<>();
 }

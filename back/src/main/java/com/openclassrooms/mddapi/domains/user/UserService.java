@@ -13,4 +13,6 @@ public interface UserService {
     List<TopicResponseDto> getTopicsByUserId(String userId);
 
     List<TopicResponseDto> addTopicToUser(String userId, String topicId);
+
+    List<TopicResponseDto> removeTopicFromUser(String userId, String topicId);
 }

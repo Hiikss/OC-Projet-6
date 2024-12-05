@@ -35,7 +35,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public Page<TopicResponseDto> getTopicsByPagination(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page - 1, size);
 
         Page<Topic> topics = topicRepository.findAll(pageable);
         List<TopicResponseDto> topicResponseDtos = topicMapper.toTopicResponseDtoList(topics.getContent());
