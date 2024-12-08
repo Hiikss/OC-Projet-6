@@ -1,0 +1,125 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { BehaviorSubject, catchError, map, Observable, tap, throwError } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
+import { AuthenticatedUser } from '../interfaces/authenticatedUser.interface';
+import { LoginRequest } from '../interfaces/loginRequest.interface';
+import { RefreshTokenRequest } from '../interfaces/refreshTokenRequest.interface';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthService {
+  private userSession$ = new BehaviorSubject<AuthenticatedUser | null>(null);
+
+  constructor(private router: Router, private http: HttpClient, private cookieService: CookieService) {
+  }
+
+  login(loginRequest: LoginRequest) {
+    return this.http.post<AuthenticatedUser>('/auth/login', loginRequest).pipe(
+      tap((response) => {
+        this.saveTokens(response.accessToken, response.refreshToken, response.userId);
+        this.userSession$.next(response);
+      }),
+      catchError(this.handleError),
+    );
+  }
+
+  refreshToken(refreshTokenRequest: RefreshTokenRequest) {
+    return this.http.post<AuthenticatedUser>('/auth/refresh', refreshTokenRequest).pipe(
+      tap((response) => {
+        this.saveTokens(response.accessToken, response.refreshToken, response.userId);
+        this.userSession$.next(response);
+      }),
+      catchError((error) => {
+        console.error(error);
+        this.logout();
+        return throwError(() => error);
+      }),
+    );
+  }
+
+  /**
+   * Restore the session after refresh
+   */
+  restoreSession(): Promise<void> {
+    return new Promise((resolve) => {
+      const refreshToken = this.getRefreshToken();
+      const userId = this.getUserId();
+      if (refreshToken && userId) {
+        const refreshTokenRequest: RefreshTokenRequest = { refreshToken, userId };
+        this.refreshToken(refreshTokenRequest).subscribe({
+          next: () => {
+            resolve();
+          },
+          error: () => {
+            this.logout();
+            resolve();
+          },
+        });
+      } else {
+        this.clearTokens();
+        resolve();
+      }
+    });
+  }
+
+  logout() {
+    this.clearTokens();
+    this.userSession$.next(null);
+    this.router.navigate(['/']);
+  }
+
+  getAccessToken(): string | null {
+    return this.cookieService.get('accessToken') || null;
+  }
+
+  getRefreshToken(): string | null {
+    return this.cookieService.get('refreshToken') || null;
+  }
+
+  getUserId(): string | null {
+    return this.cookieService.get('userId') || null;
+  }
+
+  getUserSession() {
+    return this.userSession$.asObservable();
+  }
+
+  isLoggedIn(): Observable<boolean> {
+    return this.userSession$.asObservable().pipe(
+      map((session) => session !== null),
+    );
+  }
+
+  private saveTokens(accessToken: string, refreshToken: string, userId: string) {
+    const currentDate = new Date();
+    this.cookieService.set('accessToken', accessToken, {
+      path: '/',
+      secure: true,
+      expires: new Date(currentDate.getTime() + 5 * 60 * 1000),
+    });
+    this.cookieService.set('refreshToken', refreshToken, {
+      path: '/',
+      secure: true,
+      expires: new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000),
+    });
+    this.cookieService.set('userId', userId, {
+      path: '/',
+      secure: true,
+      expires: new Date(currentDate.getTime() + 7 * 24 * 60 * 60 * 1000),
+    });
+  }
+
+  private clearTokens() {
+    this.cookieService.delete('accessToken', '/');
+    this.cookieService.delete('refreshToken', '/');
+    this.cookieService.delete('userId', '/');
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    console.error('AuthService error:', error);
+    return throwError(() => new Error('An error occurred while processing authentication.'));
+  }
+}

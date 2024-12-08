@@ -14,4 +14,4 @@ server:
 security:
   secret-key: ${SECRET_KEY}
   access-token-duration: 5m
-  refresh-token-duration: 1d
+  refresh-token-duration: 7d

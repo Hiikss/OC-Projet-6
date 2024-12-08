@@ -28,8 +28,8 @@ public class AuthController {
         log.info("[Auth Controller] Attempting to login");
 
         AuthenticatedUserDto user = authService.login(loginDto);
-        user.setAccessToken(userAuthenticationProvider.createAccessToken(user.getId()));
-        user.setRefreshToken(refreshTokenService.createRefreshToken(user.getId()).getToken());
+        user.setAccessToken(userAuthenticationProvider.createAccessToken(user.getUserId()));
+        user.setRefreshToken(refreshTokenService.createRefreshToken(user.getUserId()).getToken());
 
         return user;
     }
@@ -40,8 +40,8 @@ public class AuthController {
         log.info("[Auth Controller] Attempting to register");
 
         AuthenticatedUserDto user = authService.register(userRequestDto);
-        user.setAccessToken(userAuthenticationProvider.createAccessToken(user.getId()));
-        user.setRefreshToken(refreshTokenService.createRefreshToken(user.getId()).getToken());
+        user.setAccessToken(userAuthenticationProvider.createAccessToken(user.getUserId()));
+        user.setRefreshToken(refreshTokenService.createRefreshToken(user.getUserId()).getToken());
 
         return user;
     }
@@ -53,9 +53,9 @@ public class AuthController {
 
         refreshTokenService.validateRefreshToken(refreshTokenRequestDto);
 
-        AuthenticatedUserDto user = authService.getAuthenticatedUser(refreshTokenRequestDto.id());
-        user.setAccessToken(userAuthenticationProvider.createAccessToken(user.getId()));
-        user.setRefreshToken(refreshTokenService.createRefreshToken(user.getId()).getToken());
+        AuthenticatedUserDto user = authService.getAuthenticatedUser(refreshTokenRequestDto.userId());
+        user.setAccessToken(userAuthenticationProvider.createAccessToken(user.getUserId()));
+        user.setRefreshToken(refreshTokenService.createRefreshToken(user.getUserId()).getToken());
 
         return user;
     }

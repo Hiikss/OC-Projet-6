@@ -29,7 +29,7 @@ public class UserController {
             @PathVariable String userId,
             @Valid @RequestBody UserRequestDto userRequestDto,
             Authentication authentication) {
-        return userService.updateUser(userId, userRequestDto, ((AuthenticatedUserDto) authentication.getPrincipal()).getId());
+        return userService.updateUser(userId, userRequestDto, ((AuthenticatedUserDto) authentication.getPrincipal()).getUserId());
     }
 
     @GetMapping("/{userId}/topics")

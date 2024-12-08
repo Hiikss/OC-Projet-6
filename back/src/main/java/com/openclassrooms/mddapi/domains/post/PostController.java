@@ -41,7 +41,7 @@ public class PostController {
 
     @PostMapping
     public void createPost(@RequestBody PostRequestDto postRequestDto, Authentication authentication) {
-        postService.createPost(postRequestDto, ((AuthenticatedUserDto) authentication.getPrincipal()).getId());
+        postService.createPost(postRequestDto, ((AuthenticatedUserDto) authentication.getPrincipal()).getUserId());
     }
 
     @GetMapping("/{postId}/comments")
@@ -54,6 +54,6 @@ public class PostController {
             @RequestBody CommentRequestDto commentRequestDto,
             @PathVariable String postId,
             Authentication authentication) {
-        commentService.createComment(commentRequestDto, postId, ((AuthenticatedUserDto) authentication.getPrincipal()).getId());
+        commentService.createComment(commentRequestDto, postId, ((AuthenticatedUserDto) authentication.getPrincipal()).getUserId());
     }
 }

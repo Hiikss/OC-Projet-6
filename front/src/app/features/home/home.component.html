@@ -1,0 +1,5 @@
+<p>home works!</p>
+<p *ngIf="(userSession$ | async) as user;">
+  Hello {{user.username}}
+  <button (click)="logOut()">Logout</button>
+</p>
