@@ -1,1 +1,161 @@
-<p>register works!</p>
+<main>
+  <p-card styleClass="mt-10 p-2 sm:p-4">
+    <form
+      [formGroup]="registerForm"
+      (ngSubmit)="onSubmit()"
+      class="flex w-full flex-col items-center gap-7 sm:w-80"
+    >
+      <h1 class="mb-4 text-2xl font-semibold">S'inscrire</h1>
+      <p-message
+        severity="error"
+        icon="pi pi-times-circle"
+        text="Identifiant ou mot de passe non reconnu"
+        class="w-full"
+        *ngIf="authError"
+      />
+      <div class="flex w-full flex-col gap-1">
+        <label for="username">Nom d'utilisateur</label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          pInputText
+        />
+        <p-message
+          severity="error"
+          text="Le nom d'utilisateur est requis"
+          size="small"
+          variant="simple"
+          *ngIf="
+            registerForm.get('username')?.invalid &&
+            registerForm.get('username')?.touched
+          "
+        />
+      </div>
+      <div class="flex w-full flex-col gap-1">
+        <label for="password">Mot de passe</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          [toggleMask]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+          [feedback]="true"
+          promptLabel="Choisir un mot de passe"
+          weakLabel="Faible"
+          mediumLabel="Moyen"
+          strongLabel="Fort"
+        >
+          <!--          <ng-template pTemplate="header">-->
+          <!--            <div class="font-semibold text-xm mb-4">Choisissez un mot de passe</div>-->
+          <!--          </ng-template>-->
+          <ng-template pTemplate="footer">
+            <p-divider />
+            <ul class="my-0 ml-2 pl-2 leading-normal">
+              <li
+                [ngClass]="{
+                  'text-green-500': isRequirementMet('lowercase'),
+                  'text-red-500': !isRequirementMet('lowercase'),
+                }"
+              >
+                <i
+                  class="pi"
+                  [ngClass]="{
+                    'pi-check-circle': isRequirementMet('lowercase'),
+                    'pi-times-circle': !isRequirementMet('lowercase'),
+                  }"
+                ></i>
+                Au moins une minusule
+              </li>
+              <li
+                [ngClass]="{
+                  'text-green-500': isRequirementMet('uppercase'),
+                  'text-red-500': !isRequirementMet('uppercase'),
+                }"
+              >
+                <i
+                  class="pi"
+                  [ngClass]="{
+                    'pi-check-circle': isRequirementMet('uppercase'),
+                    'pi-times-circle': !isRequirementMet('uppercase'),
+                  }"
+                ></i>
+                Au moins une majuscule
+              </li>
+              <li
+                [ngClass]="{
+                  'text-green-500': isRequirementMet('digit'),
+                  'text-red-500': !isRequirementMet('digit'),
+                }"
+              >
+                <i
+                  class="pi"
+                  [ngClass]="{
+                    'pi-check-circle': isRequirementMet('digit'),
+                    'pi-times-circle': !isRequirementMet('digit'),
+                  }"
+                ></i>
+                Au moins un chiffre
+              </li>
+              <li
+                [ngClass]="{
+                  'text-green-500': isRequirementMet('special'),
+                  'text-red-500': !isRequirementMet('special'),
+                }"
+              >
+                <i
+                  class="pi"
+                  [ngClass]="{
+                    'pi-check-circle': isRequirementMet('special'),
+                    'pi-times-circle': !isRequirementMet('special'),
+                  }"
+                ></i>
+                Au moins un caratère spécial
+              </li>
+              <li
+                [ngClass]="{
+                  'text-green-500': isRequirementMet('length'),
+                  'text-red-500': !isRequirementMet('length'),
+                }"
+              >
+                <i
+                  class="pi"
+                  [ngClass]="{
+                    'pi-check-circle': isRequirementMet('length'),
+                    'pi-times-circle': !isRequirementMet('length'),
+                  }"
+                ></i>
+                Minimum 8 caractères
+              </li>
+            </ul>
+          </ng-template>
+        </p-password>
+        <p-message
+          severity="error"
+          text="Le mot de passe est requis"
+          size="small"
+          variant="simple"
+          *ngIf="
+            registerForm.get('password')?.invalid &&
+            registerForm.get('password')?.touched
+          "
+        />
+      </div>
+      <p-button
+        label="S'inscrire"
+        type="submit"
+        size="large"
+        [disabled]="registerForm.invalid"
+        rounded
+        class="w-full"
+        styleClass="w-full"
+      />
+      <div>
+        Déjà inscrit ?
+        <a routerLink="/login" class="text-violet-500 hover:underline"
+          >Se connecter</a
+        >
+      </div>
+    </form>
+  </p-card>
+</main>

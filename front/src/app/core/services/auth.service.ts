@@ -1,11 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, catchError, map, Observable, tap, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  map,
+  Observable,
+  tap,
+  throwError,
+} from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthenticatedUser } from '../interfaces/authenticatedUser.interface';
 import { LoginRequest } from '../interfaces/loginRequest.interface';
 import { RefreshTokenRequest } from '../interfaces/refreshTokenRequest.interface';
+import { UserRequest } from '../interfaces/userRequest.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -13,31 +21,68 @@ import { RefreshTokenRequest } from '../interfaces/refreshTokenRequest.interface
 export class AuthService {
   private userSession$ = new BehaviorSubject<AuthenticatedUser | null>(null);
 
-  constructor(private router: Router, private http: HttpClient, private cookieService: CookieService) {
-  }
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private cookieService: CookieService
+  ) {}
 
   login(loginRequest: LoginRequest) {
     return this.http.post<AuthenticatedUser>('/auth/login', loginRequest).pipe(
       tap((response) => {
-        this.saveTokens(response.accessToken, response.refreshToken, response.userId);
-        this.userSession$.next(response);
-      }),
-      catchError(this.handleError),
-    );
-  }
-
-  refreshToken(refreshTokenRequest: RefreshTokenRequest) {
-    return this.http.post<AuthenticatedUser>('/auth/refresh', refreshTokenRequest).pipe(
-      tap((response) => {
-        this.saveTokens(response.accessToken, response.refreshToken, response.userId);
+        this.saveTokens(
+          response.accessToken,
+          response.refreshToken,
+          response.userId
+        );
         this.userSession$.next(response);
       }),
       catchError((error) => {
-        console.error(error);
-        this.logout();
-        return throwError(() => error);
-      }),
+        let message = error.message;
+        if (error.status === 401) {
+          message = 'Identifiants incorrects';
+        }
+        return throwError(() => new Error(message));
+      })
     );
+  }
+
+  register(userRequest: UserRequest) {
+    return this.http
+      .post<AuthenticatedUser>('/auth/register', userRequest)
+      .pipe(
+        tap((response) => {
+          this.saveTokens(
+            response.accessToken,
+            response.refreshToken,
+            response.userId
+          );
+          this.userSession$.next(response);
+        }),
+        catchError((error) => {
+          return throwError(() => new Error(error.message));
+        })
+      );
+  }
+
+  refreshToken(refreshTokenRequest: RefreshTokenRequest) {
+    return this.http
+      .post<AuthenticatedUser>('/auth/refresh', refreshTokenRequest)
+      .pipe(
+        tap((response) => {
+          this.saveTokens(
+            response.accessToken,
+            response.refreshToken,
+            response.userId
+          );
+          this.userSession$.next(response);
+        }),
+        catchError((error) => {
+          console.error(error);
+          this.logout();
+          return throwError(() => error.message);
+        })
+      );
   }
 
   /**
@@ -48,7 +93,10 @@ export class AuthService {
       const refreshToken = this.getRefreshToken();
       const userId = this.getUserId();
       if (refreshToken && userId) {
-        const refreshTokenRequest: RefreshTokenRequest = { refreshToken, userId };
+        const refreshTokenRequest: RefreshTokenRequest = {
+          refreshToken,
+          userId,
+        };
         this.refreshToken(refreshTokenRequest).subscribe({
           next: () => {
             resolve();
@@ -88,12 +136,16 @@ export class AuthService {
   }
 
   isLoggedIn(): Observable<boolean> {
-    return this.userSession$.asObservable().pipe(
-      map((session) => session !== null),
-    );
+    return this.userSession$
+      .asObservable()
+      .pipe(map((session) => session !== null));
   }
 
-  private saveTokens(accessToken: string, refreshToken: string, userId: string) {
+  private saveTokens(
+    accessToken: string,
+    refreshToken: string,
+    userId: string
+  ) {
     const currentDate = new Date();
     this.cookieService.set('accessToken', accessToken, {
       path: '/',
@@ -116,10 +168,5 @@ export class AuthService {
     this.cookieService.delete('accessToken', '/');
     this.cookieService.delete('refreshToken', '/');
     this.cookieService.delete('userId', '/');
-  }
-
-  private handleError(error: HttpErrorResponse) {
-    console.error('AuthService error:', error);
-    return throwError(() => new Error('An error occurred while processing authentication.'));
   }
 }

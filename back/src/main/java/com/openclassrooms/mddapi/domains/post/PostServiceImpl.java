@@ -23,10 +23,10 @@ public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
 
     @Override
-    public Page<PostResponseDto> getPostsByPagination(int page, int size) {
+    public Page<PostResponseDto> getPostsByPagination(int page, int size, List<String> topicTitles) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
 
-        Page<Post> posts = postRepository.findAll(pageable);
+        Page<Post> posts = postRepository.findAllByTopicTitles(topicTitles, pageable);
         List<PostResponseDto> postResponseDtos = postMapper.toPostResponseDtoList(posts.getContent());
 
         return new PageImpl<>(postResponseDtos, pageable, posts.getTotalElements());

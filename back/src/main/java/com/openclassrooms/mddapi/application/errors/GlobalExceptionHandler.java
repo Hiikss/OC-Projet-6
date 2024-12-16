@@ -2,7 +2,6 @@ package com.openclassrooms.mddapi.application.errors;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.openclassrooms.mddapi.application.authentication.AuthException;
-import com.openclassrooms.mddapi.domains.post.Post;
 import com.openclassrooms.mddapi.domains.post.PostException;
 import com.openclassrooms.mddapi.domains.topic.TopicException;
 import com.openclassrooms.mddapi.domains.user.UserException;

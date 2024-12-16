@@ -1,8 +1,19 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
-import { Router } from '@angular/router';
-import { CommonModule, NgIf } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule, Location } from '@angular/common';
+import { Password } from 'primeng/password';
+import { InputText } from 'primeng/inputtext';
+import { Button } from 'primeng/button';
+import { Card } from 'primeng/card';
+import { Message } from 'primeng/message';
 
 @Component({
   selector: 'app-login',
@@ -10,18 +21,30 @@ import { CommonModule, NgIf } from '@angular/common';
   imports: [
     ReactiveFormsModule,
     CommonModule,
+    Password,
+    FormsModule,
+    InputText,
+    Button,
+    Card,
+    Message,
+    RouterLink,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
   loginForm: FormGroup;
-  errorMessage: string | null = null;
+  authError: boolean = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private location: Location
+  ) {
     this.loginForm = this.fb.group({
-      login: ['', [Validators.required, Validators.minLength(4)]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      login: ['', [Validators.required]],
+      password: ['', [Validators.required]],
     });
   }
 
@@ -30,11 +53,14 @@ export class LoginComponent {
       const { login, password } = this.loginForm.value;
       this.authService.login({ login, password }).subscribe({
         next: () => this.router.navigate(['/home']),
-        error: (err) => {
-          this.errorMessage = err.message || 'Login failed. Please try again.';
+        error: () => {
+          this.authError = true;
         },
       });
     }
   }
-}
 
+  back() {
+    this.location.back();
+  }
+}

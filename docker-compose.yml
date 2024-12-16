@@ -1,0 +1,39 @@
+services:
+  database:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: ocp6
+      POSTGRES_PASSWORD: ocp6
+      POSTGRES_DB: ocp6
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./back/src/main/resources/script.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    container_name: backend
+    environment:
+      POSTGRES_PASSWORD: ocp6
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+
+volumes:
+  db-data:

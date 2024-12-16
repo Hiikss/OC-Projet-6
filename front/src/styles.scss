@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+@layer tailwind-base, primeng, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind components;
+  @tailwind utilities;
+}
+
+@import "primeicons/primeicons.css";
+
+body {
+  //font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: 'Inter var', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f8fafc;
+  padding: 0 24px;
+  margin: 0;
+}

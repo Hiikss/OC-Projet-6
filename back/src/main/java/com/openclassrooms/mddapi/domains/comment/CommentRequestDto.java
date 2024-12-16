@@ -1,4 +1,6 @@
 package com.openclassrooms.mddapi.domains.comment;
 
-public record CommentRequestDto(String content) {
+import jakarta.validation.constraints.NotBlank;
+
+public record CommentRequestDto(@NotBlank String content) {
 }

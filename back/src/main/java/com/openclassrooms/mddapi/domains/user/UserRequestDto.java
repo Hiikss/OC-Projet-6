@@ -18,7 +18,7 @@ public record UserRequestDto(
 
         @NotBlank(message = "Le mot de passe ne doit pas être vide")
         @Size(min = 8, max = 64, message = "Le mot de passe doit comprendre entre 8 et 64 caractères")
-        @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).*$", message = "Le mot de passe doit contenir au moins un chiffre, une lettre minuscule, une lettre majuscule et un caractère spécial")
+        @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!?*\\-])(?=\\S+$).*$", message = "Le mot de passe doit contenir au moins un chiffre, une lettre minuscule, une lettre majuscule et un caractère spécial")
         String password
 ) {
 }

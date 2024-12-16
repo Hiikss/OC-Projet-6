@@ -4,11 +4,13 @@ import com.openclassrooms.mddapi.application.authentication.AuthenticatedUserDto
 import com.openclassrooms.mddapi.domains.comment.CommentRequestDto;
 import com.openclassrooms.mddapi.domains.comment.CommentResponseDto;
 import com.openclassrooms.mddapi.domains.comment.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
+@Validated
 public class PostController {
 
     private final PostService postService;
@@ -24,8 +27,9 @@ public class PostController {
     @GetMapping
     public ResponseEntity<List<PostResponseDto>> getAllPosts(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<PostResponseDto> postsPage = postService.getPostsByPagination(page, size);
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "") List<String> topicTitles) {
+        Page<PostResponseDto> postsPage = postService.getPostsByPagination(page, size, topicTitles);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", Long.toString(postsPage.getTotalElements()));
@@ -40,7 +44,7 @@ public class PostController {
     }
 
     @PostMapping
-    public void createPost(@RequestBody PostRequestDto postRequestDto, Authentication authentication) {
+    public void createPost(@Valid @RequestBody PostRequestDto postRequestDto, Authentication authentication) {
         postService.createPost(postRequestDto, ((AuthenticatedUserDto) authentication.getPrincipal()).getUserId());
     }
 
@@ -51,7 +55,7 @@ public class PostController {
 
     @PostMapping("/{postId}/comments")
     public void addCommentToPost(
-            @RequestBody CommentRequestDto commentRequestDto,
+            @Valid @RequestBody CommentRequestDto commentRequestDto,
             @PathVariable String postId,
             Authentication authentication) {
         commentService.createComment(commentRequestDto, postId, ((AuthenticatedUserDto) authentication.getPrincipal()).getUserId());

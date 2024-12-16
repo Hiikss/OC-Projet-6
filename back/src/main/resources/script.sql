@@ -1,3 +1,7 @@
+-- CREATE DATABASE ocp6;
+
+-- CREATE USER ocp6 WITH PASSWORD 'ocp6';
+
 -- Table: users
 CREATE TABLE users
 (
@@ -55,3 +59,11 @@ CREATE TABLE users_topics
     topic_id VARCHAR(255) NOT NULL REFERENCES topics (id) ON DELETE CASCADE,
     PRIMARY KEY (user_id, topic_id)
 );
+
+GRANT ALL ON TABLE public.users TO ocp6;
+GRANT ALL ON TABLE public.topics TO ocp6;
+GRANT ALL ON TABLE public.posts TO ocp6;
+GRANT ALL ON TABLE public.comments TO ocp6;
+GRANT ALL ON TABLE public.refresh_tokens TO ocp6;
+GRANT ALL ON TABLE public.users_topics TO ocp6;
+
