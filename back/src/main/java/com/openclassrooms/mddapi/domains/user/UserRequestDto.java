@@ -12,7 +12,7 @@ public record UserRequestDto(
         String email,
 
         @NotBlank(message = "Le nom d'utilisateur ne doit pas être vide")
-        @Size(max = 50, message = "Le nom d'utilisateur doit être inférieur à 50 caractères")
+        @Size(min = 6, max = 30, message = "Le nom d'utilisateur doit être compris entre 6 et 30 caractères")
         @Pattern(regexp = "^\\w*$", message = "Le nom d'utilisateur ne peut contenir que des caractères alphanumériques")
         String username,
 

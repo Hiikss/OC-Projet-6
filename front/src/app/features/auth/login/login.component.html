@@ -3,7 +3,7 @@
     <form
       [formGroup]="loginForm"
       (ngSubmit)="onSubmit()"
-      class="flex w-full flex-col items-center gap-7 sm:w-80"
+      class="flex w-full flex-col items-center gap-5 sm:w-80"
     >
       <h1 class="mb-4 text-2xl font-semibold">Se connecter</h1>
       <p-message
@@ -14,13 +14,8 @@
         *ngIf="authError"
       />
       <div class="flex w-full flex-col gap-1">
-        <label for="login">Email ou nom d'utilisateur</label>
-        <input
-          id="login"
-          type="text"
-          formControlName="login"
-          pInputText
-        />
+        <label for="login">E-mail ou nom d'utilisateur</label>
+        <input id="login" type="text" formControlName="login" pInputText />
         <p-message
           severity="error"
           text="L'identifiant est requis"
@@ -59,7 +54,7 @@
         [disabled]="loginForm.invalid"
         rounded
         class="w-full"
-        styleClass="w-full"
+        styleClass="mt-4 w-full"
       />
       <div>
         Pas encore compte ?
