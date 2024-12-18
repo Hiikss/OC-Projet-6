@@ -1,204 +1,195 @@
-<main>
-  <p-card styleClass="mt-10 p-2 sm:p-4">
-    <form
-      [formGroup]="registerForm"
-      (ngSubmit)="onSubmit()"
-      class="flex w-full flex-col items-center gap-5 sm:w-80"
-    >
-      <h1 class="mb-4 text-2xl font-semibold">S'inscrire</h1>
+<p-card styleClass="mt-10 p-2 sm:p-4">
+  <form
+    [formGroup]="registerForm"
+    (ngSubmit)="onSubmit()"
+    class="flex w-full flex-col items-center gap-5 sm:w-80"
+  >
+    <h1 class="mb-4 text-2xl font-semibold">S'inscrire</h1>
+    <p-message
+      severity="error"
+      icon="pi pi-exclamation-circle"
+      [text]="errorMessage"
+      class="w-full"
+      *ngIf="authError"
+    />
+    <div class="flex w-full flex-col gap-1">
+      <label for="email">Adresse e-mail</label>
+      <input id="email" type="text" formControlName="email" pInputText />
       <p-message
         severity="error"
-        icon="pi pi-times-circle"
-        text="Identifiant ou mot de passe non reconnu"
-        class="w-full"
-        *ngIf="authError"
+        text="L'adresse e-mail n'est pas valide"
+        size="small"
+        variant="simple"
+        *ngIf="
+          registerForm.get('email')?.invalid &&
+          registerForm.get('email')?.touched
+        "
       />
-      <div class="flex w-full flex-col gap-1">
-        <label for="email">Adresse e-mail</label>
-        <input id="email" type="text" formControlName="email" pInputText />
-        <p-message
-          severity="error"
-          text="L'adresse e-mail n'est pas valide"
-          size="small"
-          variant="simple"
-          *ngIf="
-            registerForm.get('email')?.invalid &&
-            registerForm.get('email')?.touched
-          "
-        />
-      </div>
-      <div class="flex w-full flex-col gap-1">
-        <label for="username">Nom d'utilisateur</label>
-        <input
-          id="username"
-          type="text"
-          formControlName="username"
-          pInputText
-        />
-        <p-message
-          severity="error"
-          text="Le nom d'utilisateur doit contenir au minimum 6 caractères uniquement alphanumériques"
-          size="small"
-          variant="simple"
-          *ngIf="
-            registerForm.get('username')?.invalid &&
-            registerForm.get('username')?.touched
-          "
-        />
-      </div>
-      <div class="flex w-full flex-col gap-1">
-        <label for="password">Mot de passe</label>
-        <p-password
-          id="password"
-          formControlName="password"
-          [toggleMask]="true"
-          styleClass="w-full"
-          inputStyleClass="w-full"
-          [feedback]="true"
-          promptLabel="Choisir un mot de passe"
-          weakLabel="Faible"
-          mediumLabel="Moyen"
-          strongLabel="Fort"
-        >
-          <!--          <ng-template pTemplate="header">-->
-          <!--            <div class="font-semibold text-xm mb-4">Choisissez un mot de passe</div>-->
-          <!--          </ng-template>-->
-          <ng-template pTemplate="content">
-            <div class="ml-4 font-medium">Choisir un mot de passe</div>
-          </ng-template>
-          <ng-template pTemplate="footer">
-            <p-divider />
-            <ul class="my-0 ml-2 pl-2 leading-normal">
-              <li
+    </div>
+    <div class="flex w-full flex-col gap-1">
+      <label for="username">Nom d'utilisateur</label>
+      <input id="username" type="text" formControlName="username" pInputText />
+      <p-message
+        severity="error"
+        text="Le nom d'utilisateur doit contenir au minimum 6 caractères uniquement alphanumériques"
+        size="small"
+        variant="simple"
+        *ngIf="
+          registerForm.get('username')?.invalid &&
+          registerForm.get('username')?.touched
+        "
+      />
+    </div>
+    <div class="flex w-full flex-col gap-1">
+      <label for="password">Mot de passe</label>
+      <p-password
+        id="password"
+        formControlName="password"
+        [toggleMask]="true"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+        [feedback]="true"
+        promptLabel="Choisir un mot de passe"
+        weakLabel="Faible"
+        mediumLabel="Moyen"
+        strongLabel="Fort"
+      >
+        <!--          <ng-template pTemplate="header">-->
+        <!--            <div class="font-semibold text-xm mb-4">Choisissez un mot de passe</div>-->
+        <!--          </ng-template>-->
+        <ng-template pTemplate="content">
+          <div class="ml-4 font-medium">Choisir un mot de passe</div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <p-divider />
+          <ul class="my-0 ml-2 pl-2 leading-normal">
+            <li
+              [ngClass]="
+                isRequirementMet('lowercase')
+                  ? 'text-green-500'
+                  : 'text-red-500'
+              "
+            >
+              <i
+                class="pi"
                 [ngClass]="
                   isRequirementMet('lowercase')
-                    ? 'text-green-500'
-                    : 'text-red-500'
+                    ? 'pi-check-circle'
+                    : 'pi-times-circle'
                 "
-              >
-                <i
-                  class="pi"
-                  [ngClass]="
-                    isRequirementMet('lowercase')
-                      ? 'pi-check-circle'
-                      : 'pi-times-circle'
-                  "
-                ></i>
-                Au moins une minusule
-              </li>
-              <li
+              ></i>
+              Au moins une minusule
+            </li>
+            <li
+              [ngClass]="
+                isRequirementMet('uppercase')
+                  ? 'text-green-500'
+                  : 'text-red-500'
+              "
+            >
+              <i
+                class="pi"
                 [ngClass]="
                   isRequirementMet('uppercase')
-                    ? 'text-green-500'
-                    : 'text-red-500'
+                    ? 'pi-check-circle'
+                    : 'pi-times-circle'
                 "
-              >
-                <i
-                  class="pi"
-                  [ngClass]="
-                    isRequirementMet('uppercase')
-                      ? 'pi-check-circle'
-                      : 'pi-times-circle'
-                  "
-                ></i>
-                Au moins une majuscule
-              </li>
-              <li
+              ></i>
+              Au moins une majuscule
+            </li>
+            <li
+              [ngClass]="
+                isRequirementMet('digit') ? 'text-green-500' : 'text-red-500'
+              "
+            >
+              <i
+                class="pi"
                 [ngClass]="
-                  isRequirementMet('digit') ? 'text-green-500' : 'text-red-500'
+                  isRequirementMet('digit')
+                    ? 'pi-check-circle'
+                    : 'pi-times-circle'
                 "
-              >
-                <i
-                  class="pi"
-                  [ngClass]="
-                    isRequirementMet('digit')
-                      ? 'pi-check-circle'
-                      : 'pi-times-circle'
-                  "
-                ></i>
-                Au moins un chiffre
-              </li>
-              <li
+              ></i>
+              Au moins un chiffre
+            </li>
+            <li
+              [ngClass]="
+                isRequirementMet('special') ? 'text-green-500' : 'text-red-500'
+              "
+            >
+              <i
+                class="pi"
                 [ngClass]="
                   isRequirementMet('special')
-                    ? 'text-green-500'
-                    : 'text-red-500'
+                    ? 'pi-check-circle'
+                    : 'pi-times-circle'
                 "
-              >
-                <i
-                  class="pi"
-                  [ngClass]="
-                    isRequirementMet('special')
-                      ? 'pi-check-circle'
-                      : 'pi-times-circle'
-                  "
-                ></i>
-                Au moins un caratère spécial
-              </li>
-              <li
+              ></i>
+              Au moins un caratère spécial
+            </li>
+            <li
+              [ngClass]="
+                isRequirementMet('length') ? 'text-green-500' : 'text-red-500'
+              "
+            >
+              <i
+                class="pi"
                 [ngClass]="
-                  isRequirementMet('length') ? 'text-green-500' : 'text-red-500'
+                  isRequirementMet('length')
+                    ? 'pi-check-circle'
+                    : 'pi-times-circle'
                 "
-              >
-                <i
-                  class="pi"
-                  [ngClass]="
-                    isRequirementMet('length')
-                      ? 'pi-check-circle'
-                      : 'pi-times-circle'
-                  "
-                ></i>
-                Minimum 8 caractères
-              </li>
-            </ul>
-          </ng-template>
-        </p-password>
-        <p-message
-          severity="error"
-          text="Le mot de passe ne remplit pas les conditions"
-          size="small"
-          variant="simple"
-          *ngIf="
-            registerForm.get('password')?.invalid &&
-            registerForm.get('password')?.touched
-          "
-        />
-      </div>
-      <div class="flex w-full flex-col gap-1">
-        <label for="confirmPassword">Confirmer mot de passe</label>
-        <p-password
-          id="confirmPassword"
-          formControlName="confirmPassword"
-          [toggleMask]="true"
-          styleClass="w-full"
-          inputStyleClass="w-full"
-          [feedback]="false"
-        />
-        <p-message
-          severity="error"
-          text="Les mots de passe ne correspondent pas"
-          size="small"
-          variant="simple"
-          *ngIf="
-            registerForm.get('confirmPassword')?.errors?.['passwordMismatch']
-          "
-        />
-      </div>
-      <p-button
-        label="S'inscrire"
-        type="submit"
-        size="large"
-        [disabled]="registerForm.invalid"
-        rounded
-        class="w-full"
-        styleClass="mt-4 w-full"
+              ></i>
+              Minimum 8 caractères
+            </li>
+          </ul>
+        </ng-template>
+      </p-password>
+      <p-message
+        severity="error"
+        text="Le mot de passe ne remplit pas les conditions"
+        size="small"
+        variant="simple"
+        *ngIf="
+          registerForm.get('password')?.invalid &&
+          registerForm.get('password')?.touched
+        "
       />
-      <div>
-        Déjà inscrit ?
-        <a routerLink="/login" class="text-violet-500 hover:underline"
-          >Se connecter</a
-        >
-      </div>
-    </form>
-  </p-card>
-</main>
+    </div>
+    <div class="flex w-full flex-col gap-1">
+      <label for="confirmPassword">Confirmer mot de passe</label>
+      <p-password
+        id="confirmPassword"
+        formControlName="confirmPassword"
+        [toggleMask]="true"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+        [feedback]="false"
+      />
+      <p-message
+        severity="error"
+        text="Les mots de passe ne correspondent pas"
+        size="small"
+        variant="simple"
+        *ngIf="
+          registerForm.get('confirmPassword')?.errors?.['passwordMismatch']
+        "
+      />
+    </div>
+    <p-button
+      label="S'inscrire"
+      type="submit"
+      size="large"
+      [disabled]="registerForm.invalid"
+      rounded
+      class="w-full"
+      styleClass="mt-4 w-full"
+    />
+    <div>
+      Déjà inscrit ?
+      <a routerLink="/login" class="text-violet-500 hover:underline"
+        >Se connecter</a
+      >
+    </div>
+  </form>
+</p-card>

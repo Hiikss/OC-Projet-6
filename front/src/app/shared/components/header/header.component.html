@@ -1,0 +1,38 @@
+<nav class="flex items-center justify-between px-6">
+  <a routerLink="/"
+    ><img
+      ngSrc="/logo.png"
+      alt="logo"
+      width="695"
+      height="401"
+      priority
+      class="h-20 w-full object-contain"
+  /></a>
+  <ul class="flex items-center gap-7">
+    <li>
+      <a
+        routerLink="/home"
+        routerLinkActive="text-violet-500"
+        class="transition-colors hover:text-violet-500"
+        >Articles</a
+      >
+    </li>
+    <li>
+      <a
+        routerLink="/themes"
+        routerLinkActive="text-violet-500"
+        class="transition-colors duration-300 ease-in-out hover:text-violet-500"
+        >Thèmes</a
+      >
+    </li>
+    <li>
+      <a
+        routerLink="/profile"
+        routerLinkActive="text-violet-500 border-violet-500 border-2"
+        class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 transition-colors duration-300 ease-in-out hover:border-2 hover:border-violet-500 hover:text-violet-500"
+      >
+        <i class="pi pi-user text-xl"></i>
+      </a>
+    </li>
+  </ul>
+</nav>

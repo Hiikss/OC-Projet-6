@@ -60,7 +60,7 @@ export class AuthService {
           this.userSession$.next(response);
         }),
         catchError((error) => {
-          return throwError(() => new Error(error.message));
+          return throwError(() => error);
         })
       );
   }

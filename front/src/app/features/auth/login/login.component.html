@@ -1,67 +1,65 @@
-<main>
-  <p-card styleClass="mt-10 p-2 sm:p-4">
-    <form
-      [formGroup]="loginForm"
-      (ngSubmit)="onSubmit()"
-      class="flex w-full flex-col items-center gap-5 sm:w-80"
-    >
-      <h1 class="mb-4 text-2xl font-semibold">Se connecter</h1>
+<p-card styleClass="mt-10 p-2 sm:p-4">
+  <form
+    [formGroup]="loginForm"
+    (ngSubmit)="onSubmit()"
+    class="flex w-full flex-col items-center gap-5 sm:w-80"
+  >
+    <h1 class="mb-4 text-2xl font-semibold">Se connecter</h1>
+    <p-message
+      severity="error"
+      icon="pi pi-exclamation-circle"
+      text="Identifiant ou mot de passe non reconnu"
+      class="w-full"
+      *ngIf="authError"
+    />
+    <div class="flex w-full flex-col gap-1">
+      <label for="login">E-mail ou nom d'utilisateur</label>
+      <input id="login" type="text" formControlName="login" pInputText />
       <p-message
         severity="error"
-        icon="pi pi-times-circle"
-        text="Identifiant ou mot de passe non reconnu"
-        class="w-full"
-        *ngIf="authError"
+        text="L'identifiant est requis"
+        size="small"
+        variant="simple"
+        *ngIf="
+          loginForm.get('login')?.invalid && loginForm.get('login')?.touched
+        "
       />
-      <div class="flex w-full flex-col gap-1">
-        <label for="login">E-mail ou nom d'utilisateur</label>
-        <input id="login" type="text" formControlName="login" pInputText />
-        <p-message
-          severity="error"
-          text="L'identifiant est requis"
-          size="small"
-          variant="simple"
-          *ngIf="
-            loginForm.get('login')?.invalid && loginForm.get('login')?.touched
-          "
-        />
-      </div>
-      <div class="flex w-full flex-col gap-1">
-        <label for="password">Mot de passe</label>
-        <p-password
-          id="password"
-          formControlName="password"
-          [toggleMask]="true"
-          styleClass="w-full"
-          inputStyleClass="w-full"
-          [feedback]="false"
-        />
-        <p-message
-          severity="error"
-          text="Le mot de passe est requis"
-          size="small"
-          variant="simple"
-          *ngIf="
-            loginForm.get('password')?.invalid &&
-            loginForm.get('password')?.touched
-          "
-        />
-      </div>
-      <p-button
-        label="Se connecter"
-        type="submit"
-        size="large"
-        [disabled]="loginForm.invalid"
-        rounded
-        class="w-full"
-        styleClass="mt-4 w-full"
+    </div>
+    <div class="flex w-full flex-col gap-1">
+      <label for="password">Mot de passe</label>
+      <p-password
+        id="password"
+        formControlName="password"
+        [toggleMask]="true"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+        [feedback]="false"
       />
-      <div>
-        Pas encore compte ?
-        <a routerLink="/register" class="text-violet-500 hover:underline"
-          >S'inscire</a
-        >
-      </div>
-    </form>
-  </p-card>
-</main>
+      <p-message
+        severity="error"
+        text="Le mot de passe est requis"
+        size="small"
+        variant="simple"
+        *ngIf="
+          loginForm.get('password')?.invalid &&
+          loginForm.get('password')?.touched
+        "
+      />
+    </div>
+    <p-button
+      label="Se connecter"
+      type="submit"
+      size="large"
+      [disabled]="loginForm.invalid"
+      rounded
+      class="w-full"
+      styleClass="mt-4 w-full"
+    />
+    <div>
+      Pas encore compte ?
+      <a routerLink="/register" class="text-violet-500 hover:underline"
+        >S'inscire</a
+      >
+    </div>
+  </form>
+</p-card>

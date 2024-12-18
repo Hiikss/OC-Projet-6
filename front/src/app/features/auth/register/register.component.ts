@@ -15,7 +15,7 @@ import { Password } from 'primeng/password';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { Divider } from 'primeng/divider';
-import { PrimeTemplate } from 'primeng/api';
+import { MessageService, PrimeTemplate } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -41,13 +41,15 @@ import { Subject, takeUntil } from 'rxjs';
 export class RegisterComponent implements OnDestroy {
   registerForm: FormGroup;
   authError: boolean = false;
+  errorMessage: string = '';
 
   private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {
     this.registerForm = this.fb.group(
       {
@@ -86,6 +88,11 @@ export class RegisterComponent implements OnDestroy {
       .subscribe(() => {
         this.registerForm.get('confirmPassword')?.updateValueAndValidity();
       });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   multiplePatternValidator(patterns: { pattern: RegExp; errorKey: string }[]) {
@@ -127,16 +134,31 @@ export class RegisterComponent implements OnDestroy {
     if (this.registerForm.valid) {
       const { email, username, password } = this.registerForm.value;
       this.authService.register({ email, username, password }).subscribe({
-        next: () => this.router.navigate(['/home']),
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail: 'Le compte à bien été créé',
+          });
+          this.router.navigate(['/home']);
+        },
         error: (err) => {
+          this.errorMessage = this.getErrorMessage(err);
           this.authError = true;
         },
       });
     }
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  private getErrorMessage(err: any): string {
+    if (err.status === 409 && err.error?.message) {
+      const message = err.error.message.toLowerCase();
+      if (message.includes('email')) {
+        return 'Cet email est déjà utilisé';
+      } else if (message.includes('username')) {
+        return "Ce nom d'utilisateur est déjà utilisé";
+      }
+    }
+    return 'Une erreur est survenue';
   }
 }

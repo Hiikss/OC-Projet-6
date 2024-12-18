@@ -1,2 +1,8 @@
-<router-outlet />
-<p-toast position="top-center"/>
+
+<header class="fixed z-30 h-20 w-full border-b" *ngIf="isLoggedIn() | async">
+  <app-header />
+</header>
+<main class="mt-20 flex flex-col items-center">
+  <router-outlet />
+</main>
+<p-toast position="top-center" />
