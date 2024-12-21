@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { HeaderComponent } from './shared/components/header/header.component';
-import { AuthService } from './core/services/auth.service';
+import { AuthService } from './core/services/auth/auth.service';
 import { AsyncPipe, NgIf } from '@angular/common';
 
 @Component({

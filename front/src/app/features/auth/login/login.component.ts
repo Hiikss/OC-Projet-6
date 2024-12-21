@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule, Location } from '@angular/common';
 import { Password } from 'primeng/password';
@@ -14,6 +14,7 @@ import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { Message } from 'primeng/message';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
@@ -40,7 +41,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private messageService: MessageService
   ) {
     this.loginForm = this.fb.group({
       login: ['', [Validators.required]],
@@ -52,7 +54,14 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       const { login, password } = this.loginForm.value;
       this.authService.login({ login, password }).subscribe({
-        next: () => this.router.navigate(['/home']),
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail: 'Vous êtes connecté',
+          });
+          this.router.navigate(['/home']);
+        },
         error: () => {
           this.authError = true;
         },

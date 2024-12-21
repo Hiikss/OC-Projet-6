@@ -22,3 +22,12 @@ body {
   //padding: 0 24px;
   //margin: 0;
 }
+
+:root .p-togglebutton.p-togglebutton-checked::before {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+:root .p-togglebutton.p-togglebutton-checked .p-togglebutton-icon {
+  color: unset !important;
+}

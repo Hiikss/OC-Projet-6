@@ -1,0 +1,49 @@
+<div class="flex w-full max-w-[600px] flex-col">
+  <div *ngIf="post as post">
+    <h1 class="text-xl font-bold mt-6">{{ post.title }}</h1>
+    <div class="flex gap-x-12 gap-y-2 mt-5 flex-wrap">
+      <div class="flex items-center">
+        <i class="pi pi-calendar"></i>
+        <span class="ml-2">{{ post.createdAt | date: 'dd/MM/yyyy H:mm' }}</span>
+      </div>
+      <div class="flex items-center">
+        <i class="pi pi-user"></i>
+        <span class="ml-2">{{ post.authorUsername }}</span>
+      </div>
+      <div class="flex items-center">
+        <i class="pi pi-palette"></i>
+        <span class="ml-2">{{ post.topicTitle }}</span>
+      </div>
+    </div>
+    <div class="mt-4">{{ post.content }}</div>
+  </div>
+  <p-divider />
+  <div>
+    <h2 class="text-lg font-semibold">Commentaires</h2>
+    <div class="mt-4 flex flex-col gap-4">
+      <p-card *ngFor="let comment of comments">
+        <div>{{ comment.content }}</div>
+        <ng-template pTemplate="footer">
+          <div class="text-sm text-gray-500">
+            <span>De </span>
+            <span>{{ comment.authorUsername }}</span>
+            <span> le </span>
+            <span>{{ comment.createdAt | date: 'dd/MM/yyyy à H:mm' }}</span>
+          </div>
+        </ng-template>
+      </p-card>
+    </div>
+    <form [formGroup]="commentForm" (ngSubmit)="sendComment()" class="mt-8 flex items-center gap-4">
+      <p-floatlabel class="flex-1">
+        <textarea
+          pTextarea
+          id="commentContent"
+          formControlName="commentContent"
+          class="w-full resize-none"
+        ></textarea>
+        <label for="commentContent">Écrire un commentaire</label>
+      </p-floatlabel>
+      <p-button type="submit" icon="pi pi-send" size="large" />
+    </form>
+  </div>
+</div>

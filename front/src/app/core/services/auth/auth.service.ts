@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import {
   BehaviorSubject,
@@ -10,10 +10,10 @@ import {
   throwError,
 } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthenticatedUser } from '../interfaces/authenticatedUser.interface';
-import { LoginRequest } from '../interfaces/loginRequest.interface';
-import { RefreshTokenRequest } from '../interfaces/refreshTokenRequest.interface';
-import { UserRequest } from '../interfaces/userRequest.interface';
+import { AuthenticatedUser } from '../../interfaces/authenticatedUser.interface';
+import { LoginRequest } from '../../interfaces/loginRequest.interface';
+import { RefreshTokenRequest } from '../../interfaces/refreshTokenRequest.interface';
+import { UserRequest } from '../../interfaces/userRequest.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -78,7 +78,6 @@ export class AuthService {
           this.userSession$.next(response);
         }),
         catchError((error) => {
-          console.error(error);
           this.logout();
           return throwError(() => error.message);
         })

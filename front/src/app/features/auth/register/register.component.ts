@@ -13,7 +13,7 @@ import { Message } from 'primeng/message';
 import { NgClass, NgIf } from '@angular/common';
 import { Password } from 'primeng/password';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
 import { Divider } from 'primeng/divider';
 import { MessageService, PrimeTemplate } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
