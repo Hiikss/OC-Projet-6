@@ -1,0 +1,56 @@
+<main class="mx-4 mt-20 flex flex-1 flex-col items-center sm:mx-8">
+  <p-card styleClass="mt-10 p-2 sm:p-4" class="w-full sm:w-[420px]">
+    <form
+      [formGroup]="postForm"
+      (ngSubmit)="onSubmit()"
+      class="flex flex-col items-center gap-5"
+    >
+      <h1 class="mb-4 text-2xl font-semibold">Créer un nouvel article</h1>
+      <div class="flex w-full flex-col gap-1">
+        <label for="title">Titre</label>
+        <input
+          id="title"
+          type="text"
+          formControlName="title"
+          placeholder="Titre de l'article"
+          pInputText
+        />
+      </div>
+      <div class="w-full">
+        <label for="topic">Thème</label>
+        <p-select
+          inputId="topic"
+          id="topic"
+          formControlName="topic"
+          [options]="topics"
+          optionLabel="title"
+          placeholder="Sélectionner un thème"
+          [filter]="true"
+          emptyMessage="Aucun thème trouvé"
+          emptyFilterMessage="Aucun thème trouvé"
+          class="w-full"
+        />
+      </div>
+      <div class="flex w-full flex-col gap-1">
+        <label for="content">Contenu</label>
+        <textarea
+          pTextarea
+          id="content"
+          formControlName="content"
+          rows="6"
+          placeholder="Contenu de l'article"
+          class="w-full resize-none"
+        ></textarea>
+      </div>
+      <p-button
+        label="Créer"
+        type="submit"
+        size="large"
+        [disabled]="postForm.invalid"
+        rounded
+        class="w-full"
+        styleClass="mt-4 w-full"
+      />
+    </form>
+  </p-card>
+</main>

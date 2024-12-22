@@ -17,7 +17,7 @@ import {
 } from '@angular/forms';
 import { FloatLabel } from 'primeng/floatlabel';
 import { Textarea } from 'primeng/textarea';
-import { PrimeTemplate } from 'primeng/api';
+import { ProgressSpinner } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-post-details',
@@ -32,7 +32,7 @@ import { PrimeTemplate } from 'primeng/api';
     ReactiveFormsModule,
     FloatLabel,
     Textarea,
-    PrimeTemplate,
+    ProgressSpinner,
   ],
   templateUrl: './post-details.component.html',
   styleUrl: './post-details.component.scss',
@@ -41,7 +41,7 @@ export class PostDetailsComponent implements OnInit {
   private postId!: string;
   commentForm: FormGroup;
   post!: Post;
-  comments: Comment[] = [];
+  comments!: Comment[];
 
   constructor(
     private route: ActivatedRoute,
@@ -80,6 +80,7 @@ export class PostDetailsComponent implements OnInit {
         )
         .subscribe({
           next: () => {
+            this.commentForm.reset();
             this.getComments();
           },
         });

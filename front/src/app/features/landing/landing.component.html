@@ -1,29 +1,31 @@
-<img
-  ngSrc="/logo.png"
-  alt="logo"
-  width="695"
-  height="401"
-  priority
-  class="h-full w-full max-w-[480px] object-contain"
-/>
-<div
-  class="mt-12 flex items-center justify-center gap-x-16 max-sm:flex-col max-sm:gap-y-8"
->
-  <p-button
-    label="Se connecter"
-    (onClick)="navigateToLogin()"
-    rounded="true"
-    size="large"
-    class="w-full"
-    styleClass="h-12 w-52 border-2 max-sm:w-full"
+<main class="mx-4 mt-20 flex flex-1 flex-col items-center sm:mx-8">
+  <img
+    ngSrc="/logo.png"
+    alt="logo"
+    width="695"
+    height="401"
+    priority
+    class="h-full w-full max-w-[480px] object-contain"
   />
-  <p-button
-    label="S'inscrire"
-    (onClick)="navigateToRegister()"
-    rounded="true"
-    size="large"
-    class="w-full"
-    styleClass="h-12 w-52 border-2 max-sm:w-full"
-    [outlined]="true"
-  />
-</div>
+  <div
+    class="mt-12 flex items-center justify-center gap-x-16 max-sm:flex-col max-sm:gap-y-8"
+  >
+    <p-button
+      label="Se connecter"
+      (onClick)="navigateToLogin()"
+      rounded="true"
+      size="large"
+      class="w-full"
+      styleClass="h-12 w-52 border-2 max-sm:w-full"
+    />
+    <p-button
+      label="S'inscrire"
+      (onClick)="navigateToRegister()"
+      rounded="true"
+      size="large"
+      class="w-full"
+      styleClass="h-12 w-52 border-2 max-sm:w-full"
+      [outlined]="true"
+    />
+  </div>
+</main>

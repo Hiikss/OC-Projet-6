@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface PostService {
 
-    Page<PostResponseDto> getPostsByPagination(int page, int size, List<String> topicTitles);
+    Page<PostResponseDto> getPostsByPagination(int page, int size, List<String> topicTitles, String sortBy, String sortDir);
 
     PostResponseDto getPostById(String postId);
 
-    void createPost(PostRequestDto postRequestDto, String authorId);
+    PostResponseDto createPost(PostRequestDto postRequestDto, String authorId);
 }

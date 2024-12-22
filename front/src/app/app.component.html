@@ -1,8 +1,8 @@
-
-<header class="fixed z-30 h-20 w-full border-b bg-white" *ngIf="isLoggedIn() | async">
+<header
+  class="fixed z-30 h-20 w-full border-b bg-white"
+  *ngIf="isLoggedIn() | async"
+>
   <app-header />
 </header>
-<main class="mt-20 flex flex-col items-center px-4 sm:px-8">
-  <router-outlet />
-</main>
+<router-outlet />
 <p-toast position="top-center" />

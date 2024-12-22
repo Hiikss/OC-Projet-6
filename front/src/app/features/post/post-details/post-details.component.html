@@ -1,49 +1,86 @@
-<div class="flex w-full max-w-[600px] flex-col">
-  <div *ngIf="post as post">
-    <h1 class="text-xl font-bold mt-6">{{ post.title }}</h1>
-    <div class="flex gap-x-12 gap-y-2 mt-5 flex-wrap">
-      <div class="flex items-center">
-        <i class="pi pi-calendar"></i>
-        <span class="ml-2">{{ post.createdAt | date: 'dd/MM/yyyy H:mm' }}</span>
+<main class="mx-4 mt-20 flex flex-1 flex-col items-center sm:mx-8">
+  <div class="flex w-full max-w-[600px] flex-col">
+    <div *ngIf="post as post">
+      <h1 class="mt-6 text-xl font-bold">{{ post.title }}</h1>
+      <div class="mt-5 flex flex-wrap gap-x-12 gap-y-2">
+        <div class="flex items-center">
+          <i class="pi pi-calendar"></i>
+          <span class="ml-2">{{
+            post.createdAt | date: 'dd/MM/yyyy H:mm'
+          }}</span>
+        </div>
+        <div class="flex items-center">
+          <i class="pi pi-user"></i>
+          <span class="ml-2">{{ post.authorUsername }}</span>
+        </div>
+        <div class="flex items-center">
+          <i class="pi pi-palette"></i>
+          <span class="ml-2">{{ post.topicTitle }}</span>
+        </div>
       </div>
-      <div class="flex items-center">
-        <i class="pi pi-user"></i>
-        <span class="ml-2">{{ post.authorUsername }}</span>
-      </div>
-      <div class="flex items-center">
-        <i class="pi pi-palette"></i>
-        <span class="ml-2">{{ post.topicTitle }}</span>
-      </div>
+      <div class="mt-4 break-all text-justify">{{ post.content }}</div>
     </div>
-    <div class="mt-4">{{ post.content }}</div>
-  </div>
-  <p-divider />
-  <div>
-    <h2 class="text-lg font-semibold">Commentaires</h2>
-    <div class="mt-4 flex flex-col gap-4">
-      <p-card *ngFor="let comment of comments">
-        <div>{{ comment.content }}</div>
-        <ng-template pTemplate="footer">
+    <p-progress-spinner
+      *ngIf="!post"
+      strokeWidth="4"
+      ariaLabel="Chargement..."
+      class="self-center"
+      styleClass="mt-20 h-12 w-12"
+    />
+    <p-divider />
+    <div>
+      <h2 class="text-lg font-semibold">
+        Commentaires - {{ comments.length }}
+      </h2>
+      <div class="mt-4 flex flex-col gap-4">
+        <p-progress-spinner
+          *ngIf="!comments"
+          strokeWidth="4"
+          ariaLabel="Chargement..."
+          class="self-center"
+          styleClass="h-12 w-12"
+        />
+        <p-card *ngFor="let comment of comments">
           <div class="text-sm text-gray-500">
             <span>De </span>
             <span>{{ comment.authorUsername }}</span>
             <span> le </span>
             <span>{{ comment.createdAt | date: 'dd/MM/yyyy à H:mm' }}</span>
           </div>
-        </ng-template>
-      </p-card>
+          <div class="mt-3 text-justify">{{ comment.content }}</div>
+        </p-card>
+      </div>
+      <form
+        [formGroup]="commentForm"
+        (ngSubmit)="sendComment()"
+        class="mt-8 flex flex-col items-center sm:flex-row gap-4"
+      >
+        <p-floatlabel class="w-full">
+          <textarea
+            pTextarea
+            id="commentContent"
+            formControlName="commentContent"
+            rows="4"
+            class="w-full resize-none"
+          ></textarea>
+          <label for="commentContent">Écrire un commentaire</label>
+        </p-floatlabel>
+        <p-button
+          type="submit"
+          icon="pi pi-send"
+          size="large"
+          class="max-sm:hidden"
+        />
+        <p-button
+          type="submit"
+          label="Envoyer"
+          icon="pi pi-send"
+          size="large"
+          [rounded]="true"
+          class="sm:hidden w-full"
+          styleClass="w-full"
+        />
+      </form>
     </div>
-    <form [formGroup]="commentForm" (ngSubmit)="sendComment()" class="mt-8 flex items-center gap-4">
-      <p-floatlabel class="flex-1">
-        <textarea
-          pTextarea
-          id="commentContent"
-          formControlName="commentContent"
-          class="w-full resize-none"
-        ></textarea>
-        <label for="commentContent">Écrire un commentaire</label>
-      </p-floatlabel>
-      <p-button type="submit" icon="pi pi-send" size="large" />
-    </form>
   </div>
-</div>
+</main>

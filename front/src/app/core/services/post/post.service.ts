@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Post } from '../../interfaces/post.interface';
 import { Topic } from '../../interfaces/topic.interface';
+import { PostRequest } from '../../interfaces/postRequest.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -30,5 +31,9 @@ export class PostService {
     const params = new HttpParams().set('id', id);
 
     return this.http.get<Post>(`/posts/${id}`, { params });
+  }
+
+  createPost(postRequest: PostRequest): Observable<Post> {
+    return this.http.post<Post>(`/posts`, postRequest);
   }
 }

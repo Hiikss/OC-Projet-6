@@ -23,8 +23,9 @@ public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
 
     @Override
-    public Page<PostResponseDto> getPostsByPagination(int page, int size, List<String> topicTitles) {
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
+    public Page<PostResponseDto> getPostsByPagination(int page, int size, List<String> topicTitles, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
 
         Page<Post> posts = postRepository.findAllByTopicTitles(topicTitles, pageable);
         List<PostResponseDto> postResponseDtos = postMapper.toPostResponseDtoList(posts.getContent());
@@ -41,7 +42,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void createPost(PostRequestDto postRequestDto, String authorId) {
+    public PostResponseDto createPost(PostRequestDto postRequestDto, String authorId) {
         User user = userRepository.findById(authorId)
                 .orElseThrow(() -> new UserException("User not found", HttpStatus.NOT_FOUND));
 
@@ -54,6 +55,6 @@ public class PostServiceImpl implements PostService {
                 .author(user)
                 .topic(topic).build();
 
-        postRepository.save(post);
+        return postMapper.toPostResponseDto(postRepository.save(post));
     }
 }

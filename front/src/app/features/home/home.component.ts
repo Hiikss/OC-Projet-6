@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Button } from 'primeng/button';
 import { PostService } from '../../core/services/post/post.service';
 import { Post } from '../../core/interfaces/post.interface';
-import { DatePipe, NgForOf } from '@angular/common';
+import { DatePipe, NgForOf, NgIf } from '@angular/common';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 import { Card } from 'primeng/card';
 import { RouterLink } from '@angular/router';
@@ -17,6 +17,7 @@ import { Divider } from 'primeng/divider';
 import { Checkbox } from 'primeng/checkbox';
 import { ToggleButton } from 'primeng/togglebutton';
 import { MultiSelect } from 'primeng/multiselect';
+import { ProgressSpinner } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-home',
@@ -36,26 +37,29 @@ import { MultiSelect } from 'primeng/multiselect';
     Checkbox,
     ToggleButton,
     MultiSelect,
+    NgIf,
+    ProgressSpinner,
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
+  private fetching = false;
+
   isFilterDrawerOpen = false;
   posts: Post[] = [];
   userTopics: Topic[] = [];
   selectedTopics: Topic[] = [];
   page = 1;
   size = 10;
-  loading = false;
   sortDir: string = 'desc';
   sortAsc: boolean = false;
+  isLoading: boolean = true;
 
   constructor(
     private postService: PostService,
     private topicService: TopicService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.loadTopics();
@@ -63,21 +67,21 @@ export class HomeComponent implements OnInit {
 
   async loadTopics() {
     this.userTopics = await firstValueFrom(this.topicService.getUserTopics());
-    for(let i=0; i<30; i++) {
-      const topic: Topic = {
-        id: 'id',
-        title: 'title' + i,
-        description: 'description',
-      }
-      this.userTopics.push(topic)
-    }
+    // for (let i = 0; i < 30; i++) {
+    //   const topic: Topic = {
+    //     id: 'id',
+    //     title: 'title' + i,
+    //     description: 'description',
+    //   };
+    //   this.userTopics.push(topic);
+    // }
     this.loadPosts();
   }
 
   loadPosts(reset?: boolean) {
-    if (this.loading) return;
+    if (this.fetching) return;
 
-    this.loading = true;
+    this.fetching = true;
 
     this.postService
       .getPosts(
@@ -94,10 +98,12 @@ export class HomeComponent implements OnInit {
             this.posts = [...this.posts, ...posts];
           }
           this.page++;
-          this.loading = false;
+          this.fetching = false;
+          this.isLoading = false;
         },
         error: () => {
-          this.loading = false;
+          this.fetching = false;
+          this.isLoading = false;
         },
       });
   }

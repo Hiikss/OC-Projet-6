@@ -28,8 +28,11 @@ public class PostController {
     public ResponseEntity<List<PostResponseDto>> getAllPosts(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "") List<String> topicTitles) {
-        Page<PostResponseDto> postsPage = postService.getPostsByPagination(page, size, topicTitles);
+            @RequestParam(defaultValue = "") List<String> topicTitles,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir
+            ) {
+        Page<PostResponseDto> postsPage = postService.getPostsByPagination(page, size, topicTitles, sortBy, sortDir);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", Long.toString(postsPage.getTotalElements()));
@@ -44,8 +47,8 @@ public class PostController {
     }
 
     @PostMapping
-    public void createPost(@Valid @RequestBody PostRequestDto postRequestDto, Authentication authentication) {
-        postService.createPost(postRequestDto, ((AuthenticatedUserDto) authentication.getPrincipal()).getUserId());
+    public PostResponseDto createPost(@Valid @RequestBody PostRequestDto postRequestDto, Authentication authentication) {
+        return postService.createPost(postRequestDto, ((AuthenticatedUserDto) authentication.getPrincipal()).getUserId());
     }
 
     @GetMapping("/{postId}/comments")

@@ -8,6 +8,8 @@ import { HomeComponent } from './features/home/home.component';
 import { TopicComponent } from './features/topic/topic.component';
 import { PostDetailsComponent } from './features/post/post-details/post-details.component';
 import { NotFoundComponent } from './features/not-found/not-found.component';
+import { PostCreationComponent } from './features/post/post-creation/post-creation.component';
+import { ProfileComponent } from './features/profile/profile/profile.component';
 
 export const routes: Routes = [
   { path: '', component: LandingComponent, canActivate: [redirectGuard] },
@@ -18,10 +20,20 @@ export const routes: Routes = [
     canActivate: [redirectGuard],
   },
   { path: 'home', component: HomeComponent, canActivate: [authGuard] },
-  { path: 'themes', component: TopicComponent, canActivate: [authGuard] },
+  { path: 'topics', component: TopicComponent, canActivate: [authGuard] },
+  {
+    path: 'post/create',
+    component: PostCreationComponent,
+    canActivate: [authGuard],
+  },
   {
     path: 'post/:id',
     component: PostDetailsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
     canActivate: [authGuard],
   },
   { path: '**', component: NotFoundComponent },
