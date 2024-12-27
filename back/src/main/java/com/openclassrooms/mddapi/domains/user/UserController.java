@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -30,6 +31,15 @@ public class UserController {
             @Valid @RequestBody UserRequestDto userRequestDto,
             Authentication authentication) {
         return userService.updateUser(userId, userRequestDto, ((AuthenticatedUserDto) authentication.getPrincipal()).getUserId());
+    }
+
+    @PatchMapping("/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public UserResponseDto partialUpdateUser(
+            @PathVariable String userId,
+            @RequestBody Map<String, String> updatedFields,
+            Authentication authentication) {
+        return userService.partialUpdateUser(userId, updatedFields, ((AuthenticatedUserDto) authentication.getPrincipal()).getUserId());
     }
 
     @GetMapping("/{userId}/topics")

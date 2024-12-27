@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -38,12 +39,12 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException("User not found", HttpStatus.NOT_FOUND));
 
-        Optional<User> oUser = userRepository.findByEmail(user.getEmail());
+        Optional<User> oUser = userRepository.findByEmail(userRequestDto.email());
         if (oUser.isPresent() && !userId.equals(oUser.get().getId())) {
             throw new UserException("Email is already used", HttpStatus.CONFLICT);
         }
 
-        oUser = userRepository.findByUsername(user.getUsername());
+        oUser = userRepository.findByUsername(userRequestDto.username());
         if (oUser.isPresent() && !userId.equals(oUser.get().getId())) {
             throw new UserException("Username is already used", HttpStatus.CONFLICT);
         }
@@ -51,6 +52,43 @@ public class UserServiceImpl implements UserService {
         user.setEmail(userRequestDto.email());
         user.setUsername(userRequestDto.username());
         user.setPassword(passwordEncoder.encode(userRequestDto.password()));
+
+        User savedUser = userRepository.save(user);
+
+        return userMapper.toUserDto(savedUser);
+    }
+
+    @Override
+    public UserResponseDto partialUpdateUser(String userId, Map<String, String> updatedFiels, String authenticatedUserId) {
+        if (!userId.equals(authenticatedUserId)) {
+            throw new UserException("Can't update this user", HttpStatus.FORBIDDEN);
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserException("User not found", HttpStatus.NOT_FOUND));
+
+
+        updatedFiels.forEach((key, value) -> {
+            switch (key) {
+                case "email" -> {
+                    Optional<User> oUser = userRepository.findByEmail(value);
+                    if (oUser.isPresent() && !userId.equals(oUser.get().getId())) {
+                        throw new UserException("Email is already used", HttpStatus.CONFLICT);
+                    }
+                    user.setEmail(value);
+                }
+                case "username" -> {
+                    Optional<User> oUser = userRepository.findByUsername(user.getUsername());
+                    if (oUser.isPresent() && !userId.equals(oUser.get().getId())) {
+                        throw new UserException("Username is already used", HttpStatus.CONFLICT);
+                    }
+                    user.setUsername(value);
+                }
+                case "password" -> user.setPassword(passwordEncoder.encode(value));
+
+                default -> throw new UserException("Invalid key", HttpStatus.BAD_REQUEST);
+            }
+        });
 
         User savedUser = userRepository.save(user);
 

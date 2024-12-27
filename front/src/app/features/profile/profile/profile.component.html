@@ -1,13 +1,58 @@
 <main class="mx-4 mt-20 flex flex-1 flex-col items-center sm:mx-8">
-  <h1>Profil utilisateur</h1>
+  <h1 class="text-2xl font-semibold">Profil utilisateur</h1>
+  <form
+    [formGroup]="userForm"
+    (ngSubmit)="updateProfile()"
+    class="mt-6 flex w-72 flex-col items-center gap-8"
+  >
+    <div class="flex w-full flex-col gap-1">
+      <p-floatlabel>
+        <label for="email">Adresse e-mail</label>
+        <input
+          id="email"
+          type="text"
+          formControlName="email"
+          pInputText
+          class="w-full"
+      /></p-floatlabel>
+      <p-message
+        severity="error"
+        text="L'adresse e-mail n'est pas valide"
+        size="small"
+        variant="simple"
+        *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+      />
+    </div>
+    <div class="flex w-full flex-col gap-1">
+      <p-floatlabel>
+        <label for="username">Nom d'utilisateur</label>
+        <input
+          id="username"
+          type="text"
+          formControlName="username"
+          pInputText
+          class="w-full"
+      /></p-floatlabel>
+      <p-message
+        severity="error"
+        text="Le nom d'utilisateur doit contenir au minimum 6 caractères uniquement alphanumériques"
+        size="small"
+        variant="simple"
+        *ngIf="
+          userForm.get('username')?.invalid && userForm.get('username')?.touched
+        "
+      />
+    </div>
+    <p-button label="Sauvegarder" type="submit" />
+  </form>
   <p-divider />
   <h2 class="text-2xl font-semibold">Abonnements</h2>
   <div class="mt-6">
     <p-card *ngFor="let topic of userTopics" styleClass="w-[480px]">
       <ng-template #title>{{ topic.title }}</ng-template>
-      <p class="text-justify line-clamp-3">{{ topic.description }}</p>
+      <p class="line-clamp-3 text-justify">{{ topic.description }}</p>
       <ng-template #footer>
-        <div class="flex justify-center mt-4">
+        <div class="mt-4 flex justify-center">
           <p-button label="Se désabonner" (onClick)="unsubscribe(topic.id)" />
         </div>
       </ng-template>

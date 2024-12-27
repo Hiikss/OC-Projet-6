@@ -17,6 +17,7 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import { Divider } from 'primeng/divider';
 import { MessageService, PrimeTemplate } from 'primeng/api';
 import { Subject, takeUntil } from 'rxjs';
+import { multiplePatternValidator, passwordMatchValidator } from '../../../shared/utilities/passwordUtils';
 
 @Component({
   selector: 'app-register',
@@ -67,7 +68,7 @@ export class RegisterComponent implements OnDestroy {
           '',
           [
             Validators.required,
-            this.multiplePatternValidator([
+            multiplePatternValidator([
               { pattern: /[a-z]/, errorKey: 'lowercase' },
               { pattern: /[A-Z]/, errorKey: 'uppercase' },
               { pattern: /\d/, errorKey: 'digit' },
@@ -79,7 +80,7 @@ export class RegisterComponent implements OnDestroy {
         confirmPassword: ['', []],
       },
       {
-        validators: this.passwordMatchValidator,
+        validators: passwordMatchValidator,
       }
     );
     this.registerForm
@@ -93,34 +94,6 @@ export class RegisterComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  multiplePatternValidator(patterns: { pattern: RegExp; errorKey: string }[]) {
-    return (control: any) => {
-      if (!control.value) return null;
-      const errors: any = {};
-      patterns.forEach(({ pattern, errorKey }) => {
-        if (!pattern.test(control.value)) {
-          errors[errorKey] = true;
-        }
-      });
-      return Object.keys(errors).length ? errors : null;
-    };
-  }
-
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password');
-    const confirmPassword = form.get('confirmPassword');
-
-    if (
-      password &&
-      confirmPassword &&
-      password.value !== confirmPassword.value
-    ) {
-      confirmPassword.setErrors({ passwordMismatch: true });
-    }
-
-    return null;
   }
 
   isRequirementMet(errorKey: string): boolean {

@@ -14,6 +14,7 @@ import { AuthenticatedUser } from '../../interfaces/authenticatedUser.interface'
 import { LoginRequest } from '../../interfaces/loginRequest.interface';
 import { RefreshTokenRequest } from '../../interfaces/refreshTokenRequest.interface';
 import { UserRequest } from '../../interfaces/userRequest.interface';
+import { MessageService } from 'primeng/api';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,8 @@ export class AuthService {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private messageService: MessageService
   ) {}
 
   login(loginRequest: LoginRequest) {
@@ -79,6 +81,11 @@ export class AuthService {
         }),
         catchError((error) => {
           this.logout();
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Une erreur est survenue',
+            detail: 'Vous avez été déconnecté',
+          });
           return throwError(() => error.message);
         })
       );
@@ -138,6 +145,13 @@ export class AuthService {
     return this.userSession$
       .asObservable()
       .pipe(map((session) => session !== null));
+  }
+
+  updateUserSession(updates: Partial<AuthenticatedUser>) {
+    const currentUser = this.userSession$.getValue();
+    if(currentUser) {
+      this.userSession$.next({ ...currentUser, ...updates });
+    }
   }
 
   private saveTokens(
