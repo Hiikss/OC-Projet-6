@@ -15,13 +15,13 @@ import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
 import { FloatLabel } from 'primeng/floatlabel';
-import { AuthenticatedUser } from '../../../core/interfaces/authenticatedUser.interface';
 import {
   multiplePatternValidator,
   passwordMatchValidator,
 } from '../../../shared/utilities/passwordUtils';
 import { UserService } from '../../../core/services/user/user.service';
 import { MessageService } from 'primeng/api';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -91,27 +91,33 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     this.authService
       .getUserSession()
-      .subscribe((user: AuthenticatedUser | null) => {
+      .pipe(take(1))
+      .subscribe((user) => {
         if (user) {
-          this.userForm.setValue({
-            email: user.email,
-            username: user.username,
-          });
+          this.userForm.setValue(
+            {
+              email: user.email,
+              username: user.username,
+            },
+            { emitEvent: false }
+          );
         }
       });
-    this.topicService.getUserTopics().subscribe({
-      next: (topics) => {
-        this.userTopics = topics;
-      },
-    });
+    this.topicService
+      .getUserTopics()
+      .pipe(take(1))
+      .subscribe({
+        next: (topics) => {
+          this.userTopics = topics;
+        },
+      });
   }
 
   updateProfile() {
     if (this.userForm.valid) {
       const { email, username } = this.userForm.value;
       this.userService.updateUser({ email, username }).subscribe({
-        next: (user) => {
-          this.authService.updateUserSession({ email: user.email, username: user.username });
+        next: () => {
           this.messageService.add({
             severity: 'success',
             summary: 'Succès',

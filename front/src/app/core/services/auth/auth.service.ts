@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import {
   BehaviorSubject,
   catchError,
+  debounceTime,
+  distinctUntilChanged,
   map,
   Observable,
   tap,
@@ -138,7 +140,7 @@ export class AuthService {
   }
 
   getUserSession() {
-    return this.userSession$.asObservable();
+    return this.userSession$.asObservable().pipe(distinctUntilChanged());
   }
 
   isLoggedIn(): Observable<boolean> {
@@ -149,8 +151,12 @@ export class AuthService {
 
   updateUserSession(updates: Partial<AuthenticatedUser>) {
     const currentUser = this.userSession$.getValue();
-    if(currentUser) {
-      this.userSession$.next({ ...currentUser, ...updates });
+    if (currentUser) {
+      const updatedUser = { ...currentUser, ...updates };
+
+      if (JSON.stringify(currentUser) !== JSON.stringify(updatedUser)) {
+        this.userSession$.next(updatedUser);
+      }
     }
   }
 

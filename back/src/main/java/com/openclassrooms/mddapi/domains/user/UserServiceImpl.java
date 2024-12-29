@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
                     user.setEmail(value);
                 }
                 case "username" -> {
-                    Optional<User> oUser = userRepository.findByUsername(user.getUsername());
+                    Optional<User> oUser = userRepository.findByUsername(value);
                     if (oUser.isPresent() && !userId.equals(oUser.get().getId())) {
                         throw new UserException("Username is already used", HttpStatus.CONFLICT);
                     }
