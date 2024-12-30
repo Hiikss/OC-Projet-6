@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -10,18 +10,18 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import { TopicService } from '../../../core/services/topic/topic.service';
 import { Topic } from '../../../core/interfaces/topic.interface';
 import { Card } from 'primeng/card';
-import { NgForOf, NgIf } from '@angular/common';
+import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { Button } from 'primeng/button';
 import { InputText } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
-import { FloatLabel } from 'primeng/floatlabel';
 import {
   multiplePatternValidator,
   passwordMatchValidator,
 } from '../../../shared/utilities/passwordUtils';
 import { UserService } from '../../../core/services/user/user.service';
-import { MessageService } from 'primeng/api';
-import { take } from 'rxjs';
+import { MessageService, PrimeTemplate } from 'primeng/api';
+import { Subject, take, takeUntil } from 'rxjs';
+import { Password } from 'primeng/password';
 
 @Component({
   selector: 'app-profile',
@@ -35,15 +35,19 @@ import { take } from 'rxjs';
     Message,
     NgIf,
     ReactiveFormsModule,
-    FloatLabel,
+    Password,
+    PrimeTemplate,
+    NgClass,
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss',
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
   userForm: FormGroup;
   passwordForm: FormGroup;
   userTopics: Topic[] = [];
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -86,6 +90,12 @@ export class ProfileComponent implements OnInit {
         validators: passwordMatchValidator,
       }
     );
+    this.passwordForm
+      .get('password')
+      ?.valueChanges.pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.passwordForm.get('confirmPassword')?.updateValueAndValidity();
+      });
   }
 
   ngOnInit(): void {
@@ -113,6 +123,11 @@ export class ProfileComponent implements OnInit {
       });
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   updateProfile() {
     if (this.userForm.valid) {
       const { email, username } = this.userForm.value;
@@ -124,11 +139,35 @@ export class ProfileComponent implements OnInit {
             detail: 'Votre profil a bien été mis à jour',
           });
         },
+        error: (err) => {
+          const errorMessage = this.getErrorMessage(err);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Erreur',
+            detail: errorMessage,
+          });
+        },
+      });
+    }
+  }
+
+  updatePassword() {
+    if (this.passwordForm.valid) {
+      const { password } = this.passwordForm.value;
+      this.userService.updateUser({ password }).subscribe({
+        next: () => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Succès',
+            detail: 'Le mot de passe a bien été mis à jour',
+          });
+        },
         error: () => {
           this.messageService.add({
             severity: 'error',
             summary: 'Erreur',
-            detail: 'Une erreur est survenue lors de la mise à jour du profil',
+            detail:
+              'Une erreur est survenue lors de la mise à jour du mot de passe',
           });
         },
       });
@@ -144,5 +183,24 @@ export class ProfileComponent implements OnInit {
         console.log(err);
       },
     });
+  }
+
+  isRequirementMet(errorKey: string): boolean {
+    return (
+      this.passwordForm.get('password')?.errors?.[errorKey] === undefined &&
+      this.passwordForm.get('password')?.value
+    );
+  }
+
+  private getErrorMessage(err: any): string {
+    if (err.status === 409 && err.error?.message) {
+      const message = err.error.message.toLowerCase();
+      if (message.includes('email')) {
+        return 'Cet email est déjà utilisé';
+      } else if (message.includes('username')) {
+        return "Ce nom d'utilisateur est déjà utilisé";
+      }
+    }
+    return 'Une erreur est survenue lors de la mise à jour du profil';
   }
 }

@@ -1,5 +1,11 @@
-<main class="mx-4 mt-20 flex flex-1 flex-col items-center sm:mx-8">
-  <p-card styleClass="mt-10 p-2 sm:p-4">
+<main class="mx-4 flex flex-1 flex-col items-center sm:mx-8">
+  <p-button
+    icon="pi pi-arrow-left"
+    routerLink="/"
+    [outlined]="true"
+    class="absolute left-4 top-4 flex items-center justify-center sm:left-8"
+  />
+  <p-card styleClass="mt-24 p-2 sm:p-4">
     <form
       [formGroup]="registerForm"
       (ngSubmit)="onSubmit()"
@@ -60,9 +66,6 @@
           mediumLabel="Moyen"
           strongLabel="Fort"
         >
-          <!--          <ng-template pTemplate="header">-->
-          <!--            <div class="font-semibold text-xm mb-4">Choisissez un mot de passe</div>-->
-          <!--          </ng-template>-->
           <ng-template pTemplate="content">
             <div class="ml-4 font-medium">Choisir un mot de passe</div>
           </ng-template>

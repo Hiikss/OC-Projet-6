@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -100,7 +101,10 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserException("User not found", HttpStatus.NOT_FOUND));
 
-        return topicMapper.toTopicResponseDtoList(user.getTopics().stream().toList());
+        return topicMapper.toTopicResponseDtoList(user.getTopics().stream().toList())
+                .stream()
+                .sorted(Comparator.comparing(TopicResponseDto::title))
+                .toList();
     }
 
     @Override
@@ -120,7 +124,10 @@ public class UserServiceImpl implements UserService {
         user.getTopics().add(topic);
         userRepository.save(user);
 
-        return topicMapper.toTopicResponseDtoList(user.getTopics().stream().toList());
+        return topicMapper.toTopicResponseDtoList(user.getTopics().stream().toList())
+                .stream()
+                .sorted(Comparator.comparing(TopicResponseDto::title))
+                .toList();
     }
 
     @Override
@@ -139,7 +146,10 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
-        return topicMapper.toTopicResponseDtoList(user.getTopics().stream().toList());
+        return topicMapper.toTopicResponseDtoList(user.getTopics().stream().toList())
+                .stream()
+                .sorted(Comparator.comparing(TopicResponseDto::title))
+                .toList();
     }
 
 }

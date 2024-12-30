@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PostService } from '../../../core/services/post/post.service';
 import { Post } from '../../../core/interfaces/post.interface';
 import { Comment } from '../../../core/interfaces/comment.interface';
@@ -33,6 +33,7 @@ import { ProgressSpinner } from 'primeng/progressspinner';
     FloatLabel,
     Textarea,
     ProgressSpinner,
+    RouterLink,
   ],
   templateUrl: './post-details.component.html',
   styleUrl: './post-details.component.scss',
@@ -41,7 +42,7 @@ export class PostDetailsComponent implements OnInit {
   private postId!: string;
   commentForm: FormGroup;
   post!: Post;
-  comments!: Comment[];
+  comments: Comment[] = [];
 
   constructor(
     private route: ActivatedRoute,

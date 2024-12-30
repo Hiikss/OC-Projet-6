@@ -45,8 +45,8 @@
       infiniteScroll
       [infiniteScrollDistance]="0"
       (scrolled)="loadPosts()"
-      *ngIf="posts.length>0"
-      class="mt-10 grid w-full grid-cols-1 gap-x-8 gap-y-4 lg:grid-cols-2"
+      *ngIf="posts.length > 0"
+      class="mb-4 mt-10 grid w-full grid-cols-1 gap-x-8 gap-y-4 lg:grid-cols-2"
     >
       <p-card
         *ngFor="let post of posts"
@@ -68,10 +68,12 @@
       *ngIf="isLoading"
       ariaLabel="Chargement..."
       class="mt-32"
-      styleClass="w-12 h-12"
+      styleClass="h-12 w-12"
       strokeWidth="4"
     />
-    <div *ngIf="!isLoading && posts.length === 0" class="mt-20">Aucun article trouvé</div>
+    <div *ngIf="!isLoading && posts.length === 0" class="mt-20">
+      Aucun article trouvé
+    </div>
   </div>
 </main>
 <p-drawer

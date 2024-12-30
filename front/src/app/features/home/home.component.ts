@@ -67,14 +67,6 @@ export class HomeComponent implements OnInit {
 
   async loadTopics() {
     this.userTopics = await firstValueFrom(this.topicService.getUserTopics());
-    // for (let i = 0; i < 30; i++) {
-    //   const topic: Topic = {
-    //     id: 'id',
-    //     title: 'title' + i,
-    //     description: 'description',
-    //   };
-    //   this.userTopics.push(topic);
-    // }
     this.loadPosts();
   }
 

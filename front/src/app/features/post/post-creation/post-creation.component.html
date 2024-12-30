@@ -1,5 +1,11 @@
 <main class="mx-4 mt-20 flex flex-1 flex-col items-center sm:mx-8">
-  <p-card styleClass="mt-10 p-2 sm:p-4" class="w-full sm:w-[420px]">
+  <p-button
+    icon="pi pi-arrow-left"
+    routerLink="/home"
+    [outlined]="true"
+    class="absolute left-4 mt-2 flex items-center justify-center sm:left-8"
+  />
+  <p-card styleClass="p-2 sm:p-4" class="mt-12 w-full sm:w-[420px]">
     <form
       [formGroup]="postForm"
       (ngSubmit)="onSubmit()"

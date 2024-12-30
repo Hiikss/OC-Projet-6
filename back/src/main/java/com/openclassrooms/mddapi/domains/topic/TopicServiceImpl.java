@@ -2,10 +2,7 @@ package com.openclassrooms.mddapi.domains.topic;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +32,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public Page<TopicResponseDto> getTopicsByPagination(int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("title"));
 
         Page<Topic> topics = topicRepository.findAll(pageable);
         List<TopicResponseDto> topicResponseDtos = topicMapper.toTopicResponseDtoList(topics.getContent());

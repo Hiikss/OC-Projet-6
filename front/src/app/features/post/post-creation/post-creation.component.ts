@@ -14,7 +14,7 @@ import { TopicService } from '../../../core/services/topic/topic.service';
 import { PostService } from '../../../core/services/post/post.service';
 import { Button } from 'primeng/button';
 import { PostRequest } from '../../../core/interfaces/postRequest.interface';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Textarea } from 'primeng/textarea';
 
@@ -29,6 +29,7 @@ import { Textarea } from 'primeng/textarea';
     Select,
     Button,
     Textarea,
+    RouterLink,
   ],
   templateUrl: './post-creation.component.html',
   styleUrl: './post-creation.component.scss',

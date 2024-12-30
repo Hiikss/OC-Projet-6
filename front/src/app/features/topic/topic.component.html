@@ -1,12 +1,24 @@
 <main class="mx-4 mt-20 flex flex-1 flex-col items-center sm:mx-8">
-  <div>
-    <p-card *ngFor="let topic of topics" styleClass="w-[480px]">
+  <div class="mb-4 mt-6 grid grid-cols-1 gap-x-8 gap-y-4 lg:grid-cols-2">
+    <p-card *ngFor="let topic of topics" styleClass="w-full max-w-[480px]">
       <ng-template #title>{{ topic.title }}</ng-template>
-      <p class="text-justify line-clamp-3">{{ topic.description }}</p>
-      <ng-template #footer>
-        <div class="flex justify-center mt-4">
-          <p-button label="S'abonner" *ngIf="!isSubscribedToTopic(topic.id)" (onClick)="subscribeToTopic(topic.id)"/>
-          <p-button label="Se désabonner" *ngIf="isSubscribedToTopic(topic.id)" (onClick)="unsubscribeFromTopic(topic.id)" />
+      <ng-template #content>
+        <div class="flex h-32 flex-col justify-between">
+          <p class="line-clamp-3 text-justify">{{ topic.description }}</p>
+          <p-button
+            label="S'abonner"
+            icon="pi pi-plus"
+            class="self-center"
+            *ngIf="!isSubscribedToTopic(topic.id)"
+            (onClick)="subscribeToTopic(topic.id)"
+          />
+          <p-button
+            label="Se désabonner"
+            icon="pi pi-minus"
+            class="self-center"
+            *ngIf="isSubscribedToTopic(topic.id)"
+            (onClick)="unsubscribeFromTopic(topic.id)"
+          />
         </div>
       </ng-template>
     </p-card>

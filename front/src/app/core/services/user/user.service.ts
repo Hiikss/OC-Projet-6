@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth/auth.service';
-import { switchMap, take, tap } from 'rxjs';
+import { catchError, switchMap, take, tap, throwError } from 'rxjs';
 import { User } from '../../interfaces/user.interface';
 
 @Injectable({
@@ -28,6 +28,9 @@ export class UserService {
                 email: updatedUser.email,
                 username: updatedUser.username,
               });
+            }),
+            catchError((error) => {
+              return throwError(() => error);
             })
           );
       })
