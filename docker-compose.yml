@@ -19,6 +19,7 @@ services:
     container_name: backend
     environment:
       POSTGRES_PASSWORD: ocp6
+      SECRET_KEY: ow1t4BeEPE6BBOrwWEgZ1VjPY686bI27
       SPRING_PROFILES_ACTIVE: docker
     ports:
       - "8080:8080"
@@ -31,7 +32,7 @@ services:
       dockerfile: Dockerfile
     container_name: frontend
     ports:
-      - "4200:4200"
+      - "4200:80"
     depends_on:
       - backend
 
