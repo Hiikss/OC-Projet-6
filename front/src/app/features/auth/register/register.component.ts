@@ -96,6 +96,10 @@ export class RegisterComponent implements OnDestroy {
     this.destroy$.complete();
   }
 
+  /**
+   * Check if register form has error key in its errors
+   * @param errorKey
+   */
   isRequirementMet(errorKey: string): boolean {
     return (
       this.registerForm.get('password')?.errors?.[errorKey] === undefined &&
@@ -103,6 +107,9 @@ export class RegisterComponent implements OnDestroy {
     );
   }
 
+  /**
+   * Submit register form and redirect to homepage if success
+   */
   onSubmit() {
     if (this.registerForm.valid) {
       const { email, username, password } = this.registerForm.value;
@@ -123,6 +130,11 @@ export class RegisterComponent implements OnDestroy {
     }
   }
 
+  /**
+   * Get error message based on error response
+   * @param err
+   * @private
+   */
   private getErrorMessage(err: any): string {
     if (err.status === 409 && err.error?.message) {
       const message = err.error.message.toLowerCase();

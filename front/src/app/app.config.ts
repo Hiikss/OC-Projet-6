@@ -43,7 +43,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: (authService: AuthService) => () =>
-        authService.restoreSession(),
+        authService.restoreSession(), // restore the session when page refresh
       deps: [AuthService],
       multi: true,
     },

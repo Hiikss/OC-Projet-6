@@ -60,6 +60,9 @@ export class PostCreationComponent implements OnInit {
     });
   }
 
+  /**
+   * Submit post form and navigate to post details if success
+   */
   onSubmit() {
     if (this.postForm.valid) {
       const postRequest: PostRequest = {

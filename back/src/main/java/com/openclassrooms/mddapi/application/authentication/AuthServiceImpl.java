@@ -17,6 +17,11 @@ public class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Log the user by its email or username
+     * @param loginDto
+     * @return the authenticated user
+     */
     @Override
     public AuthenticatedUserDto login(LoginDto loginDto) {
         Optional<User> oUser = userRepository.findByLogin(loginDto.login());
@@ -28,6 +33,11 @@ public class AuthServiceImpl implements AuthService {
         throw new AuthException("Bad credentials", HttpStatus.UNAUTHORIZED);
     }
 
+    /**
+     * Register a new user. Check if the email and the username is already used. Encode the password aswell
+     * @param userRequestDto
+     * @return the authenticated user
+     */
     @Override
     public AuthenticatedUserDto register(UserRequestDto userRequestDto) {
         Optional<User> oUser = userRepository.findByEmail(userRequestDto.email());
@@ -48,6 +58,11 @@ public class AuthServiceImpl implements AuthService {
         return authMapper.toAuthenticatedUserDto(savedUser);
     }
 
+    /**
+     * Get the authenticated user based on the user id
+     * @param userId
+     * @return the authenticated user
+     */
     @Override
     public AuthenticatedUserDto getAuthenticatedUser(String userId) {
         User user = userRepository.findById(userId)

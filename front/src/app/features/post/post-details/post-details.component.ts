@@ -72,6 +72,9 @@ export class PostDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * Send comment and reset form and get comments
+   */
   sendComment() {
     if (this.commentForm.valid) {
       this.commentService
@@ -88,6 +91,10 @@ export class PostDetailsComponent implements OnInit {
     }
   }
 
+  /**
+   * Get comments of post and sort by more recent first
+   * @private
+   */
   private getComments() {
     this.commentService.getPostComments(this.postId).subscribe({
       next: (comments) =>

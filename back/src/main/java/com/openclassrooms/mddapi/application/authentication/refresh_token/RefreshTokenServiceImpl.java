@@ -2,10 +2,8 @@ package com.openclassrooms.mddapi.application.authentication.refresh_token;
 
 import com.openclassrooms.mddapi.application.authentication.AuthException;
 import com.openclassrooms.mddapi.application.security.SecurityProperties;
-import com.openclassrooms.mddapi.domains.user.User;
 import com.openclassrooms.mddapi.domains.user.UserException;
 import com.openclassrooms.mddapi.domains.user.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,11 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final UserRepository userRepository;
     private final SecurityProperties securityProperties;
 
+    /**
+     * Create a new refresh token for a user. Delete existing token
+     * @param userId
+     * @return the refresh token
+     */
     @Override
     public RefreshToken createRefreshToken(String userId) {
         Optional<RefreshToken> oRefreshToken = refreshTokenRepository.findByUserId(userId);
@@ -36,6 +39,10 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
         return refreshTokenRepository.save(refreshToken);
     }
 
+    /**
+     * Validate the refresh token. Verify if it's expired and bind to the user
+     * @param refreshTokenRequestDto
+     */
     @Override
     public void validateRefreshToken(RefreshTokenRequestDto refreshTokenRequestDto) {
         RefreshToken refreshToken = refreshTokenRepository.findByTokenAndUserId(refreshTokenRequestDto.refreshToken(), refreshTokenRequestDto.userId())

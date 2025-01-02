@@ -39,6 +39,10 @@ export class TopicComponent implements OnInit {
       });
   }
 
+  /**
+   * Add topic to user
+   * @param topicId
+   */
   subscribeToTopic(topicId: string) {
     this.topicService
       .addTopicToUser(topicId)
@@ -50,6 +54,10 @@ export class TopicComponent implements OnInit {
       });
   }
 
+  /**
+   * Remove topic from user
+   * @param topicId
+   */
   unsubscribeFromTopic(topicId: string) {
     this.topicService
       .removeTopicFromUser(topicId)
@@ -61,6 +69,10 @@ export class TopicComponent implements OnInit {
       });
   }
 
+  /**
+   * Check if user has topic
+   * @param topicId
+   */
   isSubscribedToTopic(topicId: string) {
     return this.userTopics.some((topic) => topic.id === topicId);
   }

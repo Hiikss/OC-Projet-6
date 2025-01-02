@@ -13,7 +13,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/posts")
@@ -32,7 +35,10 @@ public class PostController {
             @RequestParam(defaultValue = "createdAt") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir
             ) {
-        Page<PostResponseDto> postsPage = postService.getPostsByPagination(page, size, topicTitles, sortBy, sortDir);
+        List<String> decodedTitles = topicTitles.stream()
+                .map(title -> URLDecoder.decode(title, StandardCharsets.UTF_8))
+                .toList();
+        Page<PostResponseDto> postsPage = postService.getPostsByPagination(page, size, decodedTitles, sortBy, sortDir);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("X-Total-Count", Long.toString(postsPage.getTotalElements()));

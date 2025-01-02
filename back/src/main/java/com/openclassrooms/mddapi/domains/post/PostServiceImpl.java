@@ -22,6 +22,15 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final PostMapper postMapper;
 
+    /**
+     * Get post based on pagination and filters
+     * @param page the page number (1 is the first page)
+     * @param size the page size
+     * @param topicTitles the topic titles list
+     * @param sortBy the sort field (e.g createAt)
+     * @param sortDir the sort direction (either asc or desc)
+     * @return the page of posts
+     */
     @Override
     public Page<PostResponseDto> getPostsByPagination(int page, int size, List<String> topicTitles, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
@@ -33,6 +42,11 @@ public class PostServiceImpl implements PostService {
         return new PageImpl<>(postResponseDtos, pageable, posts.getTotalElements());
     }
 
+    /**
+     * Get a post by its id
+     * @param postId
+     * @return the post
+     */
     @Override
     public PostResponseDto getPostById(String postId) {
         Post post = postRepository.findById(postId)
@@ -41,6 +55,12 @@ public class PostServiceImpl implements PostService {
         return postMapper.toPostResponseDto(post);
     }
 
+    /**
+     * Create a new post
+     * @param postRequestDto
+     * @param authorId
+     * @return the created post
+     */
     @Override
     public PostResponseDto createPost(PostRequestDto postRequestDto, String authorId) {
         User user = userRepository.findById(authorId)

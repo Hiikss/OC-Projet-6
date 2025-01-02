@@ -30,6 +30,10 @@ export class AuthService {
     private messageService: MessageService
   ) {}
 
+  /**
+   * Login user
+   * @param loginRequest
+   */
   login(loginRequest: LoginRequest) {
     return this.http.post<AuthenticatedUser>('/auth/login', loginRequest).pipe(
       tap((response) => {
@@ -50,6 +54,10 @@ export class AuthService {
     );
   }
 
+  /**
+   * Register new user
+   * @param userRequest
+   */
   register(userRequest: UserRequest) {
     return this.http
       .post<AuthenticatedUser>('/auth/register', userRequest)
@@ -68,6 +76,10 @@ export class AuthService {
       );
   }
 
+  /**
+   * Refresh authenticated user
+   * @param refreshTokenRequest
+   */
   refreshToken(refreshTokenRequest: RefreshTokenRequest) {
     return this.http
       .post<AuthenticatedUser>('/auth/refresh', refreshTokenRequest)
@@ -93,7 +105,7 @@ export class AuthService {
   }
 
   /**
-   * Restore the session after refresh
+   * Restore the session by refreshing it
    */
   restoreSession(): Promise<void> {
     return new Promise((resolve) => {
@@ -120,34 +132,56 @@ export class AuthService {
     });
   }
 
+  /**
+   * Logout the user
+   */
   logout() {
     this.clearTokens();
     this.userSession$.next(null);
     this.router.navigate(['/']);
   }
 
+  /**
+   * Get the access token from the cookie
+   */
   getAccessToken(): string | null {
     return this.cookieService.get('accessToken') || null;
   }
 
+  /**
+   * Get the refresh token from the cookie
+   */
   getRefreshToken(): string | null {
     return this.cookieService.get('refreshToken') || null;
   }
 
+  /**
+   * Get the user id from the cookie
+   */
   getUserId(): string | null {
     return this.cookieService.get('userId') || null;
   }
 
+  /**
+   * Get the session in observable
+   */
   getUserSession() {
     return this.userSession$.asObservable().pipe(distinctUntilChanged());
   }
 
+  /**
+   * Return if the user is logged in a boolean observable
+   */
   isLoggedIn(): Observable<boolean> {
     return this.userSession$
       .asObservable()
       .pipe(map((session) => session !== null));
   }
 
+  /**
+   * Update sessions values
+   * @param updates
+   */
   updateUserSession(updates: Partial<AuthenticatedUser>) {
     const currentUser = this.userSession$.getValue();
     if (currentUser) {
@@ -159,6 +193,13 @@ export class AuthService {
     }
   }
 
+  /**
+   * Save values in cookies
+   * @param accessToken
+   * @param refreshToken
+   * @param userId
+   * @private
+   */
   private saveTokens(
     accessToken: string,
     refreshToken: string,
@@ -182,6 +223,10 @@ export class AuthService {
     });
   }
 
+  /**
+   * Clear cookies
+   * @private
+   */
   private clearTokens() {
     this.cookieService.delete('accessToken', '/');
     this.cookieService.delete('refreshToken', '/');

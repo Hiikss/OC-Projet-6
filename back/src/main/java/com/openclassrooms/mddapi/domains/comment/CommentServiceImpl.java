@@ -21,12 +21,23 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
     private final CommentMapper commentMapper;
 
+    /**
+     * Get comments for a post
+     * @param postId
+     * @return list of comments
+     */
     @Override
     public List<CommentResponseDto> getCommentsByPostId(String postId) {
         List<Comment> comments = commentRepository.findByPostId(postId);
         return commentMapper.toCommentResponseDtoList(comments);
     }
 
+    /**
+     * Create a new comment for a post
+     * @param commentRequestDto
+     * @param postId
+     * @param authorId
+     */
     @Override
     public void createComment(CommentRequestDto commentRequestDto, String postId, String authorId) {
         Post post = postRepository.findById(postId)

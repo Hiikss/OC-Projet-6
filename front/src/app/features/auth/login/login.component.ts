@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { Router, RouterLink } from '@angular/router';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Password } from 'primeng/password';
 import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
@@ -41,7 +41,6 @@ export class LoginComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private location: Location,
     private messageService: MessageService
   ) {
     this.loginForm = this.fb.group({
@@ -50,6 +49,9 @@ export class LoginComponent {
     });
   }
 
+  /**
+   * Submt login form and redirect to homepage if success
+   */
   onSubmit() {
     if (this.loginForm.valid) {
       const { login, password } = this.loginForm.value;
@@ -67,9 +69,5 @@ export class LoginComponent {
         },
       });
     }
-  }
-
-  back() {
-    this.location.back();
   }
 }

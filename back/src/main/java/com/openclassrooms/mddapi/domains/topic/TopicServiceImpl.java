@@ -17,6 +17,10 @@ public class TopicServiceImpl implements TopicService {
     private final TopicRepository topicRepository;
     private final TopicMapper topicMapper;
 
+    /**
+     * Create a new topic
+     * @param topicRequestDto
+     */
     @Override
     public void createTopic(TopicRequestDto topicRequestDto) {
         log.info("[Topic Service] Creating topic");
@@ -30,6 +34,12 @@ public class TopicServiceImpl implements TopicService {
         topicRepository.save(topicMapper.toTopic(topicRequestDto));
     }
 
+    /**
+     * Get the topics by a pagination
+     * @param page the page number (1 is the first page)
+     * @param size the page size
+     * @return the page of topics
+     */
     @Override
     public Page<TopicResponseDto> getTopicsByPagination(int page, int size) {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("title"));

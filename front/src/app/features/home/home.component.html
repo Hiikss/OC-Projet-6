@@ -91,7 +91,7 @@
       <div class="ml-4 mt-3 flex flex-col gap-2">
         <div class="flex items-center gap-2">
           <p-radioButton
-            (onClick)="onDrawerSortingChange()"
+            (onClick)="loadPostsByFilters()"
             name="sortBy"
             inputId="dateDesc"
             id="dateDesc"
@@ -103,7 +103,7 @@
         </div>
         <div class="flex items-center gap-2">
           <p-radioButton
-            (onClick)="onDrawerSortingChange()"
+            (onClick)="loadPostsByFilters()"
             name="sortBy"
             inputId="dateAsc"
             id="dateAsc"

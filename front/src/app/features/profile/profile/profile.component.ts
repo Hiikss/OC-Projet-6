@@ -128,6 +128,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  /**
+   * Update user's profile
+   */
   updateProfile() {
     if (this.userForm.valid) {
       const { email, username } = this.userForm.value;
@@ -151,6 +154,9 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Update user's password
+   */
   updatePassword() {
     if (this.passwordForm.valid) {
       const { password } = this.passwordForm.value;
@@ -174,6 +180,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Unsubscribe user from topic
+   * @param topicId
+   */
   unsubscribe(topicId: string) {
     this.topicService.removeTopicFromUser(topicId).subscribe({
       next: (topics) => {
@@ -185,6 +195,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Check if password form contains error with error key
+   * @param errorKey
+   */
   isRequirementMet(errorKey: string): boolean {
     return (
       this.passwordForm.get('password')?.errors?.[errorKey] === undefined &&
@@ -192,6 +206,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Get error message based on error response
+   * @param err
+   * @private
+   */
   private getErrorMessage(err: any): string {
     if (err.status === 409 && err.error?.message) {
       const message = err.error.message.toLowerCase();

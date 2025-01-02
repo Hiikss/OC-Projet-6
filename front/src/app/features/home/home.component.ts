@@ -65,11 +65,19 @@ export class HomeComponent implements OnInit {
     this.loadTopics();
   }
 
+  /**
+   * Get authenticated user's topics and load posts
+   * @see loadPosts
+   */
   async loadTopics() {
     this.userTopics = await firstValueFrom(this.topicService.getUserTopics());
     this.loadPosts();
   }
 
+  /**
+   * Get posts by pagination and filters
+   * @param reset reset pagination
+   */
   loadPosts(reset?: boolean) {
     if (this.fetching) return;
 
@@ -100,10 +108,12 @@ export class HomeComponent implements OnInit {
       });
   }
 
+  /**
+   * Reset pagination and load posts with new filters
+   * @see loadPosts
+   */
   loadPostsByFilters() {
     this.page = 1;
     this.loadPosts(true);
   }
-
-  onDrawerSortingChange() {}
 }

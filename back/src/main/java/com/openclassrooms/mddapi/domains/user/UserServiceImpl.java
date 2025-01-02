@@ -23,6 +23,11 @@ public class UserServiceImpl implements UserService {
     private final TopicMapper topicMapper;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Get a user by its id
+     * @param userId
+     * @return the user
+     */
     @Override
     public UserResponseDto getUserById(String userId) {
         User user = userRepository.findById(userId)
@@ -31,6 +36,13 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserDto(user);
     }
 
+    /**
+     * Update user. This user must be the authenticated user
+     * @param userId
+     * @param userRequestDto
+     * @param authenticatedUserId
+     * @return the updated user
+     */
     @Override
     public UserResponseDto updateUser(String userId, UserRequestDto userRequestDto, String authenticatedUserId) {
         if (!userId.equals(authenticatedUserId)) {
@@ -59,6 +71,13 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserDto(savedUser);
     }
 
+    /**
+     * Partial update user. This user must be the authenticated user
+     * @param userId
+     * @param updatedFiels
+     * @param authenticatedUserId
+     * @return the updated user
+     */
     @Override
     public UserResponseDto partialUpdateUser(String userId, Map<String, String> updatedFiels, String authenticatedUserId) {
         if (!userId.equals(authenticatedUserId)) {
@@ -96,6 +115,11 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserDto(savedUser);
     }
 
+    /**
+     * Get user's topics by its id
+     * @param userId
+     * @return the user's topics list
+     */
     @Override
     public List<TopicResponseDto> getTopicsByUserId(String userId) {
         User user = userRepository.findById(userId)
@@ -107,6 +131,12 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
+    /**
+     * Add a topic to an user
+     * @param userId
+     * @param topicId
+     * @return the user's topics list
+     */
     @Override
     public List<TopicResponseDto> addTopicToUser(String userId, String topicId) {
         log.info("[User Service] Add topic {} to user {}", topicId, userId);
@@ -130,6 +160,12 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
+    /**
+     * Remove a topic from a user
+     * @param userId
+     * @param topicId
+     * @return the user's topics list
+     */
     @Override
     public List<TopicResponseDto> removeTopicFromUser(String userId, String topicId) {
         User user = userRepository.findById(userId)

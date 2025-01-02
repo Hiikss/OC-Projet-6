@@ -13,6 +13,10 @@ export class UserService {
     private authService: AuthService
   ) {}
 
+  /**
+   * Update user's fields
+   * @param updatedFields
+   */
   updateUser(updatedFields: any) {
     return this.authService.getUserSession().pipe(
       take(1),

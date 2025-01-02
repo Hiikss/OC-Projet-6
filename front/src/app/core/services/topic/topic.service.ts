@@ -13,6 +13,9 @@ export class TopicService {
     private authService: AuthService
   ) {}
 
+  /**
+   * Get authenticated user's topics list
+   */
   getUserTopics(): Observable<Topic[]> {
     return this.authService.getUserSession().pipe(
       switchMap((session) => {
@@ -24,6 +27,11 @@ export class TopicService {
     );
   }
 
+  /**
+   * Get all topics by a pagination
+   * @param page
+   * @param size
+   */
   getAllTopics(page: number, size: number): Observable<Topic[]> {
     const params = new HttpParams()
       .set('page', page.toString())
@@ -32,6 +40,10 @@ export class TopicService {
     return this.http.get<Topic[]>(`/topics`, { params });
   }
 
+  /**
+   * Add a topic to the authenticated user
+   * @param topicId
+   */
   addTopicToUser(topicId: string): Observable<Topic[]> {
     return this.authService.getUserSession().pipe(
       switchMap((session) => {
@@ -43,6 +55,10 @@ export class TopicService {
     );
   }
 
+  /**
+   * Remove a topic from the authenticated user
+   * @param topicId
+   */
   removeTopicFromUser(topicId: string): Observable<Topic[]> {
     return this.authService.getUserSession().pipe(
       switchMap((session) => {

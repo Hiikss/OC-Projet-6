@@ -13,6 +13,11 @@ import { AuthService } from '../services/auth/auth.service';
 let isRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
+/**
+ * Interceptor related to authentication
+ * @param req
+ * @param next
+ */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
 
@@ -23,6 +28,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
+  // Add access token to request authorization header
   const accessToken = authService.getAccessToken();
   if (accessToken) {
     req = req.clone({
@@ -32,6 +38,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     });
   }
 
+  // Refresh token when getting a 401. Play requests again after
   return next(req).pipe(
     catchError((error) => {
       if (error.status === 401) {
