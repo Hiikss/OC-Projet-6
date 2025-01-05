@@ -22,6 +22,11 @@ public class AuthController {
     private final UserAuthenticationProvider userAuthenticationProvider;
     private final RefreshTokenService refreshTokenService;
 
+    /**
+     * Log the user in. Return 401 if bad credentials
+     * @param loginDto
+     * @return the user's information, access token and refresh token
+     */
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
     public AuthenticatedUserDto login(@RequestBody LoginDto loginDto) {
@@ -34,6 +39,11 @@ public class AuthController {
         return user;
     }
 
+    /**
+     * Create a new user. Return 409 if email or username is already used
+     * @param userRequestDto
+     * @return the user's information, access token and refresh token
+     */
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public AuthenticatedUserDto register(@Valid @RequestBody UserRequestDto userRequestDto) {
@@ -46,6 +56,11 @@ public class AuthController {
         return user;
     }
 
+    /**
+     * Refresh the user's access token with the refresh token. If refresh token not valid, return 401
+     * @param refreshTokenRequestDto
+     * @return the user's information, new access token and new refresh token
+     */
     @PostMapping("/refresh")
     @ResponseStatus(HttpStatus.OK)
     public AuthenticatedUserDto refresh(@RequestBody RefreshTokenRequestDto refreshTokenRequestDto) {

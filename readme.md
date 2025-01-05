@@ -29,6 +29,7 @@
 * Angular 18
 * Node and npm
 * PrimeNG as UI library
+* Tailwind CSS as CSS framework
 
 ---
 

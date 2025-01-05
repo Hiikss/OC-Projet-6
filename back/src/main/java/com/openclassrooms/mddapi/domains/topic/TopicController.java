@@ -15,11 +15,21 @@ public class TopicController {
 
     private final TopicService topicService;
 
+    /**
+     * Create a new topic
+     * @param topicRequestDto
+     */
     @PostMapping
     public void createTopic(@RequestBody TopicRequestDto topicRequestDto) {
         topicService.createTopic(topicRequestDto);
     }
 
+    /**
+     * Get the topic list based on pagination. Return the total count in a X-Total-Count header
+     * @param page the page number (default is 1)
+     * @param size the page size (default is 10)
+     * @return the list of topics
+     */
     @GetMapping
     public ResponseEntity<List<TopicResponseDto>> getTopics(
             @RequestParam(defaultValue = "1") int page,
