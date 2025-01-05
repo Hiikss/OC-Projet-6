@@ -1,0 +1,139 @@
+<main class="mx-4 mt-20 flex flex-1 flex-col items-center sm:mx-8">
+  <div class="flex w-full max-w-[480px] flex-col items-center lg:max-w-[992px]">
+    <div
+      class="mt-6 flex w-full flex-col items-center gap-4 sm:flex-row sm:justify-between"
+    >
+      <p-button
+        label="Créer un article"
+        icon="pi pi-plus"
+        styleClass="w-44"
+        routerLink="/post/create"
+      />
+      <div class="flex gap-4 max-lg:hidden">
+        <p-multiSelect
+          [options]="userTopics"
+          [(ngModel)]="selectedTopics"
+          (onChange)="loadPostsByFilters()"
+          optionLabel="title"
+          placeholder="Thèmes"
+          display="chip"
+          styleClass="w-56"
+          emptyMessage="Aucun thème trouvé"
+          emptyFilterMessage="Aucun thème trouvé"
+        />
+        <p-toggleButton
+          [(ngModel)]="sortAsc"
+          (onChange)="loadPostsByFilters()"
+          onLabel="Plus anciens"
+          offLabel="Plus récents"
+          onIcon="pi pi-sort-amount-up"
+          offIcon="pi pi-sort-amount-down"
+          class="border-0"
+          styleClass="w-40 rounded-md border border-slate-300 bg-white text-slate-500 hover:border-slate-400 hover:text-slate-700"
+        />
+      </div>
+      <p-button
+        label="Filtres"
+        icon="pi pi-sliders-h"
+        [outlined]="true"
+        (onClick)="isFilterDrawerOpen = true"
+        styleClass="text-slate-500 max-sm:w-44"
+        class="lg:hidden"
+      />
+    </div>
+    <div
+      infiniteScroll
+      [infiniteScrollDistance]="0"
+      (scrolled)="loadPosts()"
+      *ngIf="posts.length > 0"
+      class="mb-4 mt-10 grid w-full grid-cols-1 gap-x-8 gap-y-4 lg:grid-cols-2"
+    >
+      <p-card
+        *ngFor="let post of posts"
+        styleClass="h-60 w-full max-w-[480px]"
+        class="transition-transform duration-300 hover:scale-[1.03] hover:cursor-pointer"
+        [routerLink]="['/post', post.id]"
+      >
+        <div class="flex flex-col gap-3">
+          <div class="text-lg font-bold">{{ post.title }}</div>
+          <div class="flex justify-between">
+            <span>{{ post.createdAt | date: 'dd/MM/yyyy H:mm' }}</span>
+            <span>{{ post.authorUsername }}</span>
+          </div>
+          <p class="line-clamp-5 text-justify">{{ post.content }}</p>
+        </div>
+      </p-card>
+    </div>
+    <p-progress-spinner
+      *ngIf="isLoading"
+      ariaLabel="Chargement..."
+      class="mt-32"
+      styleClass="h-12 w-12"
+      strokeWidth="4"
+    />
+    <div *ngIf="!isLoading && posts.length === 0" class="mt-20">
+      Aucun article trouvé
+    </div>
+  </div>
+</main>
+<p-drawer
+  [(visible)]="isFilterDrawerOpen"
+  header="Filtres"
+  position="right"
+  [blockScroll]="true"
+>
+  <div class="flex flex-col gap-4">
+    <div>
+      <div class="text-lg">
+        <span>Trier par</span>
+        <i class="pi pi-sort-amount-down ml-2"></i>
+      </div>
+      <div class="ml-4 mt-3 flex flex-col gap-2">
+        <div class="flex items-center gap-2">
+          <p-radioButton
+            (onClick)="loadPostsByFilters()"
+            name="sortBy"
+            inputId="dateDesc"
+            id="dateDesc"
+            [value]="false"
+            [(ngModel)]="sortAsc"
+            styleClass="flex items-center"
+          />
+          <label for="dateDesc">Plus récents</label>
+        </div>
+        <div class="flex items-center gap-2">
+          <p-radioButton
+            (onClick)="loadPostsByFilters()"
+            name="sortBy"
+            inputId="dateAsc"
+            id="dateAsc"
+            [value]="true"
+            [(ngModel)]="sortAsc"
+            styleClass="flex items-center"
+          />
+          <label for="dateAsc">Plus anciens</label>
+        </div>
+      </div>
+    </div>
+    <p-divider />
+    <div>
+      <div class="text-lg">
+        <span>Thèmes</span>
+        <i class="pi pi-palette ml-2"></i>
+      </div>
+      <div class="ml-4 mt-2 flex flex-col gap-2">
+        <div *ngFor="let topic of userTopics" class="flex items-center gap-2">
+          <p-checkbox
+            [inputId]="topic.title"
+            name="topics"
+            [value]="topic"
+            [(ngModel)]="selectedTopics"
+            styleClass="flex items-center"
+            (onChange)="loadPostsByFilters()"
+          />
+          <label [for]="topic.title">{{ topic.title }}</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</p-drawer>

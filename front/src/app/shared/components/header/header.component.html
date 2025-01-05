@@ -1,0 +1,114 @@
+<nav class="flex items-center justify-between px-8">
+  <a routerLink="/"
+    ><img
+      ngSrc="/logo.png"
+      alt="logo"
+      width="695"
+      height="401"
+      priority
+      class="h-20 w-full object-contain"
+  /></a>
+  <ul class="flex items-center gap-7 max-md:hidden text-lg">
+    <li>
+      <a
+        routerLink="/home"
+        routerLinkActive="text-violet-500"
+        class="transition-colors hover:text-violet-500"
+        >Articles</a
+      >
+    </li>
+    <li>
+      <a
+        routerLink="/topics"
+        routerLinkActive="text-violet-500"
+        class="transition-colors hover:text-violet-500"
+        >Thèmes</a
+      >
+    </li>
+    <li>
+      <a
+        routerLink="/profile"
+        routerLinkActive="text-violet-500 [&>span:first-child]:border-2 [&>span:first-child]:border-violet-500"
+        class="group flex items-center gap-2"
+        ><span
+          class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 transition-colors group-hover:border-2 group-hover:border-violet-500 group-hover:text-violet-500"
+        >
+          <i class="pi pi-user text-xl"></i
+        ></span>
+        <span
+          *ngIf="userSession$ | async as user"
+          class="transition-colors group-hover:text-violet-500"
+          >{{ user.username }}</span
+        >
+      </a>
+    </li>
+    <li>
+      <p-button
+        (onClick)="logout()"
+        icon="pi pi-sign-out"
+        severity="danger"
+        [outlined]="true"
+        class="flex items-center justify-center"
+      />
+    </li>
+  </ul>
+  <p-button
+    icon="pi pi-bars"
+    (onClick)="openDrawer()"
+    class="md:hidden"
+    size="large"
+  />
+</nav>
+<p-drawer [(visible)]="isDrawerOpen" position="right" [blockScroll]="true">
+  <ng-template #header>
+    <a
+      routerLink="/profile"
+      routerLinkActive="text-violet-500 [&>span:first-child]:border-2 [&>span:first-child]:border-violet-500"
+      class="group flex items-center gap-2.5"
+    >
+      <span
+        class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 transition-colors group-hover:border-2 group-hover:border-violet-500 group-hover:text-violet-500"
+      >
+        <i class="pi pi-user text-xl"></i
+      ></span>
+      <span
+        class="w-40 overflow-hidden transition-colors group-hover:text-violet-500"
+        *ngIf="userSession$ | async as user"
+        >{{ user.username }}</span
+      >
+    </a>
+  </ng-template>
+  <ng-template #closeicon>
+    <i class="pi pi-times text-xl"></i>
+  </ng-template>
+  <ng-template #content>
+    <ul class="ml-6 mt-4 flex flex-col gap-3 text-lg">
+      <li>
+        <a
+          routerLink="/home"
+          routerLinkActive="text-violet-500"
+          class="transition-colors hover:text-violet-500"
+          >Articles</a
+        >
+      </li>
+      <li>
+        <a
+          routerLink="/topics"
+          routerLinkActive="text-violet-500"
+          class="transition-colors hover:text-violet-500"
+          >Thèmes</a
+        >
+      </li>
+    </ul>
+  </ng-template>
+  <ng-template #footer>
+    <p-button
+      (onClick)="logout()"
+      label="Déconnexion"
+      icon="pi pi-sign-out"
+      severity="danger"
+      [outlined]="true"
+      class="flex items-center justify-center"
+    />
+  </ng-template>
+</p-drawer>

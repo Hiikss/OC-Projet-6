@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: MDD
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: 'ocp6'
+    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://localhost:5432/ocp6?charSet=UTF-8&prepareThreshold=0
+
+server:
+  servlet:
+    context-path: /mdd/api
+
+security:
+  secret-key: ${SECRET_KEY}
+  access-token-duration: 5m
+  refresh-token-duration: 7d
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    url: jdbc:postgresql://database:5432/ocp6?charSet=UTF-8&prepareThreshold=0
